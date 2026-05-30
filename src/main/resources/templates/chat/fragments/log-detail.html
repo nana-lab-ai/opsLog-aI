@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<body>
+<!--
+    Fragment rendered via AJAX for the chat detail pane (log entries).
+    Controller returns: "chat/fragments/log-detail :: detail"
+-->
+<div th:fragment="detail" class="detail-content">
+
+    <!-- Error state -->
+    <div th:if="${detailError != null}" class="detail-error-box">
+        <i class="bi bi-exclamation-circle fs-5"></i>
+        <span th:text="${detailError}">エラー</span>
+    </div>
+
+    <!-- Normal state -->
+    <div th:if="${log != null}">
+
+        <!-- Top bar: title + external link -->
+        <div class="detail-top-bar">
+            <h2 th:text="${log.title}">ログタイトル</h2>
+            <a th:href="@{/log/result/__${log.id}__}"
+               class="detail-full-link"
+               target="_blank">
+                <i class="bi bi-box-arrow-up-right"></i>全画面で開く
+            </a>
+        </div>
+
+        <!-- Meta info -->
+        <div class="detail-card" style="padding: 10px 14px;">
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <span class="text-muted" style="font-size:11px;">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    <span th:text="${#temporals.format(log.createdAt, 'yyyy/MM/dd HH:mm')}">日時</span>
+                </span>
+                <span class="text-muted" style="font-size:11px;">
+                    <i class="bi bi-upload me-1"></i>
+                    <span th:text="${log.importSource != null ? log.importSource.name() : 'MANUAL'}">インポート元</span>
+                </span>
+                <span th:if="${log.sourceFileName != null and !#strings.isEmpty(log.sourceFileName)}"
+                      class="text-muted" style="font-size:11px;">
+                    <i class="bi bi-file-earmark me-1"></i>
+                    <span th:text="${log.sourceFileName}">ファイル名</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Extracted log -->
+        <div th:if="${log.extractedLog != null and !#strings.isEmpty(log.extractedLog)}"
+             class="detail-card">
+            <div class="detail-card-label">
+                <i class="bi bi-terminal"></i>抽出ログ（エラー・警告行）
+            </div>
+            <div class="detail-log-block" th:text="${log.extractedLog}"></div>
+        </div>
+
+        <!-- No extracted log message -->
+        <div th:if="${log.extractedLog == null or #strings.isEmpty(log.extractedLog)}"
+             class="detail-card">
+            <div class="detail-card-label">
+                <i class="bi bi-terminal"></i>抽出ログ
+            </div>
+            <div class="text-muted" style="font-size:13px;">
+                抽出されたログ行はありません。
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

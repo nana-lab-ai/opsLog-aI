@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav id="sidebar" th:fragment="sidebar">
+    <div class="sidebar-brand">
+        <span class="brand-icon">
+            <i class="bi bi-activity text-white" style="font-size:16px;"></i>
+        </span>
+        <span class="brand-name">OpsLog AI</span>
+        <span class="brand-sub">ログ解析・障害対応管理</span>
+    </div>
+
+    <div class="sidebar-nav">
+        <span class="nav-section-label">メインメニュー</span>
+
+        <a th:href="@{/dashboard}" class="sidebar-link" data-path="/dashboard">
+            <i class="bi bi-grid-1x2-fill nav-icon"></i>
+            ダッシュボード
+        </a>
+
+        <span class="nav-section-label" style="margin-top:12px;">ログ解析</span>
+
+        <a th:href="@{/log/input}" class="sidebar-link" data-path="/log/input">
+            <i class="bi bi-search nav-icon"></i>
+            ログ解析（新規）
+        </a>
+
+        <a th:href="@{/log/list}" class="sidebar-link" data-path="/log/list">
+            <i class="bi bi-journal-text nav-icon"></i>
+            ログ履歴
+        </a>
+
+        <span class="nav-section-label" style="margin-top:12px;">障害管理</span>
+
+        <a th:href="@{/incidents}" class="sidebar-link" data-path="/incidents">
+            <i class="bi bi-exclamation-triangle-fill nav-icon"></i>
+            障害一覧
+        </a>
+
+        <a th:href="@{/incidents(status='OPEN')}" class="sidebar-link ps-4" style="font-size:12.5px;" data-path="/incidents?status=OPEN">
+            <i class="bi bi-circle nav-icon" style="font-size:10px;"></i>
+            未対応
+        </a>
+        <a th:href="@{/incidents(status='INVESTIGATING')}" class="sidebar-link ps-4" style="font-size:12.5px;" data-path="/incidents?status=INVESTIGATING">
+            <i class="bi bi-circle-half nav-icon" style="font-size:10px;"></i>
+            調査中
+        </a>
+        <a th:href="@{/incidents(status='RESOLVED')}" class="sidebar-link ps-4" style="font-size:12.5px;" data-path="/incidents?status=RESOLVED">
+            <i class="bi bi-check-circle nav-icon" style="font-size:10px;"></i>
+            対応済み
+        </a>
+
+        <span class="nav-section-label" style="margin-top:12px;">AI機能</span>
+
+        <a th:href="@{/chat}" class="sidebar-link" data-path="/chat">
+            <i class="bi bi-chat-dots-fill nav-icon"></i>
+            AIチャット検索
+        </a>
+
+        <span class="nav-section-label" style="margin-top:12px;">設定</span>
+
+        <a th:href="@{/settings/watch}" class="sidebar-link" data-path="/settings/watch">
+            <i class="bi bi-folder-symlink nav-icon"></i>
+            監視設定
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <div class="user-avatar" style="width:26px;height:26px;font-size:11px;">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <span sec:authentication="name">user</span>
+        </div>
+        <a th:href="@{/logout}" onclick="return confirm('ログアウトしますか？')">
+            <i class="bi bi-box-arrow-left me-1"></i>ログアウト
+        </a>
+    </div>
+</nav>
+<script>
+(function() {
+    var path = window.location.pathname;
+    document.querySelectorAll('.sidebar-link').forEach(function(a) {
+        var p = a.getAttribute('data-path');
+        if (p && (path === p || (p !== '/dashboard' && path.startsWith(p.split('?')[0])))) {
+            a.classList.add('active');
+        }
+    });
+})();
+</script>
+</body>
+</html>

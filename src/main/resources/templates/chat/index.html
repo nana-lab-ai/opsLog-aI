@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head th:replace="~{fragments/head :: head('AIチャット検索')}"></head>
+<body class="bg-light chat-page">
+<link rel="stylesheet" th:href="@{/css/chat.css}">
+
+<div id="wrapper">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div id="page-content">
+
+        <!-- Topnav -->
+        <div class="topnav">
+            <h5 class="page-title">
+                <i class="bi bi-chat-dots-fill me-2" style="color:#4d7cfe;"></i>AIチャット検索
+            </h5>
+        </div>
+
+        <!-- 2-column layout: chat | detail -->
+        <div class="chat-layout">
+
+            <!-- ========== LEFT: Chat pane ========== -->
+            <div class="chat-pane">
+
+                <!-- Chat header -->
+                <div class="chat-pane-header">
+                    <div class="chat-bot-icon">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <div>
+                        <div class="chat-bot-name">OpsLog AI サポート</div>
+                        <div class="chat-bot-status">
+                            <span class="status-dot"></span>
+                            オンライン・DB 検索モード
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo notice -->
+                <div class="chat-demo-notice">
+                    <i class="bi bi-shield-exclamation"></i>
+                    デモ用チャット検索です。個人情報・機密情報・本番ログは入力しないでください。
+                </div>
+
+                <!-- Messages area -->
+                <div class="chat-messages" id="chat-messages"></div>
+
+                <!-- Suggestion chips -->
+                <div class="chat-suggestions">
+                    <div class="suggest-label"><i class="bi bi-lightbulb me-1"></i>よく使う質問</div>
+                    <div class="suggest-chips">
+                        <button class="chip">ORA-12541 の障害はある？</button>
+                        <button class="chip">timeout が出ているログ</button>
+                        <button class="chip">未対応の障害を教えて</button>
+                        <button class="chip">緊急の障害は？</button>
+                        <button class="chip">重要度が高い障害</button>
+                        <button class="chip">対応済みの障害</button>
+                        <button class="chip">DB接続エラー</button>
+                        <button class="chip">調査中の障害</button>
+                    </div>
+                </div>
+
+                <!-- Input area -->
+                <div class="chat-input-area">
+                    <textarea id="chat-input"
+                              placeholder="質問を入力してください… (Enter で送信)"
+                              rows="1"
+                              autocomplete="off"></textarea>
+                    <button id="send-btn" type="button" title="送信 (Enter)">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+
+            </div><!-- /chat-pane -->
+
+            <!-- ========== RIGHT: Detail pane ========== -->
+            <div class="detail-pane" id="detail-pane">
+                <div class="detail-placeholder">
+                    <i class="bi bi-layout-text-sidebar ph-icon"></i>
+                    <p>
+                        検索結果の <strong>「詳細を見る」</strong> をクリックすると<br>
+                        ここに障害・ログの詳細が表示されます。<br>
+                        <span style="font-size:12px; opacity:0.65;">
+                            左のチャット履歴はそのまま維持されます。
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+        </div><!-- /chat-layout -->
+    </div><!-- /page-content -->
+</div><!-- /wrapper -->
+
+<!-- CSRF tokens for fetch() calls -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+window.CSRF_TOKEN  = /*[[${_csrf.token}]]*/ '';
+window.CSRF_HEADER = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
+/*]]>*/
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/chat.js}"></script>
+</body>
+</html>

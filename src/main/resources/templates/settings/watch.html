@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head th:replace="~{fragments/head :: head('監視設定')}"></head>
+<body class="bg-light">
+<div id="wrapper">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div id="page-content">
+        <div class="topnav">
+            <h5 class="page-title">
+                <i class="bi bi-folder-symlink me-2 text-primary"></i>ディレクトリ監視設定
+            </h5>
+        </div>
+
+        <div class="content-area">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
+                    <li class="breadcrumb-item active">監視設定</li>
+                </ol>
+            </nav>
+
+            <!-- ローカル環境向け注意書き -->
+            <div class="alert alert-warning d-flex align-items-start gap-2 mb-3" style="font-size:13px;">
+                <i class="bi bi-exclamation-triangle-fill mt-1 flex-shrink-0"></i>
+                <span>
+                    この機能はローカル実行環境向けです。
+                    公開環境ではファイルシステムへのアクセス制限により、ディレクトリ監視が利用できない場合があります。
+                </span>
+            </div>
+
+            <!-- フラッシュメッセージ -->
+            <div th:if="${successMessage}" class="alert alert-success d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${infoMessage}" class="alert alert-info d-flex align-items-center gap-2">
+                <i class="bi bi-info-circle-fill"></i>
+                <span th:text="${infoMessage}"></span>
+            </div>
+
+            <div class="row g-4">
+                <!-- 左: 現在の監視状態 -->
+                <div class="col-12 col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="bi bi-activity me-2"></i>現在の監視状態
+                        </div>
+                        <div class="card-body">
+                            <!-- 稼働ステータス -->
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span th:if="${isRunning}"
+                                      class="badge bg-success fs-6 px-3 py-2">
+                                    <i class="bi bi-circle-fill me-1" style="font-size:10px;"></i>稼働中
+                                </span>
+                                <span th:if="${!isRunning}"
+                                      class="badge bg-secondary fs-6 px-3 py-2">
+                                    <i class="bi bi-circle me-1" style="font-size:10px;"></i>停止中
+                                </span>
+                            </div>
+
+                            <!-- 設定詳細 -->
+                            <table class="table table-sm table-borderless mb-0" style="font-size:13px;">
+                                <tr>
+                                    <td class="text-muted pe-2" style="white-space:nowrap;">監視有効</td>
+                                    <td>
+                                        <span th:if="${setting.enabled}" class="text-success fw-semibold">
+                                            <i class="bi bi-check2-circle me-1"></i>有効
+                                        </span>
+                                        <span th:if="${!setting.enabled}" class="text-muted">
+                                            <i class="bi bi-x-circle me-1"></i>無効
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted pe-2" style="white-space:nowrap;">監視ディレクトリ</td>
+                                    <td>
+                                        <code style="font-size:12px; word-break:break-all;"
+                                              th:text="${setting.directoryPath}">-</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted pe-2" style="white-space:nowrap;">対象拡張子</td>
+                                    <td>
+                                        <span th:each="ext, s : ${setting.fileExtensionList}">
+                                            <span class="badge bg-secondary me-1" th:text="${ext}"></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${setting.updatedAt != null}">
+                                    <td class="text-muted pe-2" style="white-space:nowrap;">最終更新</td>
+                                    <td class="text-muted" style="font-size:11px;"
+                                        th:text="${#temporals.format(setting.updatedAt, 'yyyy/MM/dd HH:mm:ss')}">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右: 設定フォーム -->
+                <div class="col-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-sliders me-2"></i>監視設定を変更
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/settings/watch}" th:object="${form}" method="post">
+
+                                <!-- 監視有効/無効 -->
+                                <div class="mb-4">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="enabled" th:field="*{enabled}" style="width:3em; height:1.5em;">
+                                        <label class="form-check-label fw-semibold ms-2" for="enabled"
+                                               style="line-height:1.5em;">
+                                            ディレクトリ監視を有効にする
+                                        </label>
+                                    </div>
+                                    <div class="form-text">
+                                        有効にすると、アプリ起動時から監視ディレクトリを自動監視します。
+                                    </div>
+                                </div>
+
+                                <!-- 監視ディレクトリ -->
+                                <div class="mb-3">
+                                    <label for="directoryPath" class="form-label fw-semibold">
+                                        <i class="bi bi-folder2-open me-1"></i>監視ディレクトリ
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control font-monospace"
+                                           th:classappend="${#fields.hasErrors('directoryPath')} ? ' is-invalid'"
+                                           id="directoryPath" th:field="*{directoryPath}"
+                                           placeholder="例: C:/opslog-ai/watch">
+                                    <div class="invalid-feedback" th:errors="*{directoryPath}"></div>
+                                    <div class="form-text">
+                                        絶対パスで入力してください。ディレクトリが存在しない場合は自動作成します。
+                                    </div>
+                                </div>
+
+                                <!-- 対象拡張子 -->
+                                <div class="mb-4">
+                                    <label for="fileExtensions" class="form-label fw-semibold">
+                                        <i class="bi bi-file-earmark-text me-1"></i>対象拡張子
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control font-monospace"
+                                           th:classappend="${#fields.hasErrors('fileExtensions')} ? ' is-invalid'"
+                                           id="fileExtensions" th:field="*{fileExtensions}"
+                                           placeholder="例: .log,.txt">
+                                    <div class="invalid-feedback" th:errors="*{fileExtensions}"></div>
+                                    <div class="form-text">
+                                        カンマ区切りで入力してください（例: <code>.log,.txt</code>）。
+                                        先頭の <code>.</code> は省略可能です。
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        <i class="bi bi-floppy me-1"></i>保存して反映
+                                    </button>
+                                    <a th:href="@{/settings/watch}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i>リセット
+                                    </a>
+                                </div>
+
+                                <div class="mt-3 text-muted" style="font-size:12px;">
+                                    <i class="bi bi-lightning-charge-fill text-warning me-1"></i>
+                                    保存後は再起動なしで即時反映されます。
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 使い方ガイド -->
+                    <div class="card mt-3">
+                        <div class="card-header" style="font-size:13px;">
+                            <i class="bi bi-question-circle me-2"></i>使い方
+                        </div>
+                        <div class="card-body" style="font-size:12px;">
+                            <ol class="mb-0 ps-3" style="line-height:1.9;">
+                                <li>監視を <strong>有効</strong> にして、監視ディレクトリを設定します。</li>
+                                <li>「保存して反映」を押すと即時監視が開始されます。</li>
+                                <li>指定ディレクトリに <code>.log</code> や <code>.txt</code> ファイルを置くと自動取込されます。</li>
+                                <li>
+                                    <a th:href="@{/log/list}">ログ履歴</a> を開くと「自動取込」バッジ付きで表示されます。
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

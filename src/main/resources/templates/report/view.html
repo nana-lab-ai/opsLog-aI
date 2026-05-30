@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head th:replace="~{fragments/head :: head('障害報告書')}"></head>
+<body class="bg-light">
+<div id="wrapper">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div id="page-content">
+        <div class="topnav">
+            <h5 class="page-title"><i class="bi bi-file-earmark-text me-2 text-primary"></i>障害報告書</h5>
+            <div class="user-info">
+                <a th:href="@{/incidents/{id}(id=${incident.id})}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>障害詳細に戻る
+                </a>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/incidents}">障害一覧</a></li>
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/incidents/{id}(id=${incident.id})}"
+                           th:text="${#strings.abbreviate(incident.title, 25)}">詳細</a>
+                    </li>
+                    <li class="breadcrumb-item active">報告書</li>
+                </ol>
+            </nav>
+
+            <div class="row">
+                <div class="col-12 col-lg-9">
+                    <!-- Incident Summary Bar -->
+                    <div class="card mb-3" style="border-left:4px solid #4d7cfe;">
+                        <div class="card-body py-2 d-flex align-items-center gap-3">
+                            <div>
+                                <div style="font-size:11px; color:#7b89a8; font-weight:600;">障害チケット</div>
+                                <div style="font-weight:600;" th:text="${incident.title}">タイトル</div>
+                            </div>
+                            <span class="status-badge ms-auto"
+                                  th:classappend="${incident.severity.name() == 'CRITICAL'} ? 'severity-critical' :
+                                                   (${incident.severity.name() == 'HIGH'} ? 'severity-high' :
+                                                   (${incident.severity.name() == 'MEDIUM'} ? 'severity-medium' : 'severity-low'))"
+                                  th:text="${incident.severity.displayName}">重要度</span>
+                            <span class="status-badge"
+                                  th:classappend="${incident.status.name() == 'OPEN'} ? 'badge-open' :
+                                                   (${incident.status.name() == 'INVESTIGATING'} ? 'badge-investigating' :
+                                                   (${incident.status.name() == 'RESOLVED'} ? 'badge-resolved' : 'badge-on-hold'))"
+                                  th:text="${incident.status.displayName}">ステータス</span>
+                        </div>
+                    </div>
+
+                    <!-- No Draft -->
+                    <div th:if="${draft == null}" class="card">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-file-earmark-plus fs-1 text-muted d-block mb-3"></i>
+                            <p class="text-muted">報告書がまだ生成されていません。</p>
+                            <form th:action="@{/incidents/{id}/report/generate(id=${incident.id})}" method="post">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-magic me-1"></i>報告書を生成する
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Draft View -->
+                    <div th:if="${draft != null}" class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>
+                                <span class="ai-badge">AI</span>障害報告書ドラフト
+                            </span>
+                            <div class="d-flex gap-2 align-items-center">
+                                <small class="text-muted">
+                                    生成: <span th:text="${#temporals.format(draft.createdAt, 'yyyy/MM/dd HH:mm')}"></span>
+                                </small>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="copyReport()">
+                                    <i class="bi bi-clipboard me-1"></i>コピー
+                                </button>
+                                <form th:action="@{/incidents/{id}/report/generate(id=${incident.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-arrow-repeat me-1"></i>再生成
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="p-3">
+                                <div class="alert alert-warning py-2 mb-3" style="font-size:12px;">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    本報告書はシステムが自動生成したドラフトです。内容を確認・修正の上、正式報告書として使用してください。
+                                </div>
+                                <pre id="reportContent" class="report-output" th:text="${draft.reportText}">報告書テキスト</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-3">
+                    <div class="card mb-3">
+                        <div class="card-header">操作</div>
+                        <div class="card-body d-grid gap-2">
+                            <form th:action="@{/incidents/{id}/report/generate(id=${incident.id})}" method="post">
+                                <button type="submit" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-magic me-1"></i>
+                                    <span th:text="${draft != null} ? '報告書を再生成' : '報告書を生成'">生成</span>
+                                </button>
+                            </form>
+                            <button th:if="${draft != null}" class="btn btn-outline-secondary" onclick="copyReport()">
+                                <i class="bi bi-clipboard me-1"></i>テキストをコピー
+                            </button>
+                            <button th:if="${draft != null}" class="btn btn-outline-secondary" onclick="printReport()">
+                                <i class="bi bi-printer me-1"></i>印刷
+                            </button>
+                            <a th:href="@{/incidents/{id}(id=${incident.id})}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>障害詳細に戻る
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-info-circle me-1"></i>AI連携について
+                        </div>
+                        <div class="card-body p-3" style="font-size:12px; color:#5a6680; line-height:1.7;">
+                            <p class="mb-2">
+                                現在はテンプレートベースで報告書を生成しています。
+                            </p>
+                            <p class="mb-2">
+                                <strong>将来の拡張：</strong><br>
+                                OpenAI API / Claude API を連携することで、より精度の高い障害分析・報告書生成が可能になります。
+                            </p>
+                            <div class="ai-section p-2">
+                                <div><span class="ai-badge" style="font-size:9px;">AI</span> 連携予定機能</div>
+                                <ul class="mb-0 mt-1 ps-3" style="font-size:11px;">
+                                    <li>エラーログの自然言語解析</li>
+                                    <li>原因推定の高精度化</li>
+                                    <li>報告書の文章品質向上</li>
+                                    <li>対応案のベストプラクティス提案</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function copyReport() {
+    const el = document.getElementById('reportContent');
+    if (!el) return;
+    navigator.clipboard.writeText(el.innerText).then(() => {
+        const btn = document.querySelector('[onclick="copyReport()"]');
+        if (btn) {
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check me-1"></i>コピーしました';
+            btn.classList.add('btn-success');
+            setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('btn-success'); }, 2000);
+        }
+    });
+}
+function printReport() {
+    window.print();
+}
+</script>
+</body>
+</html>

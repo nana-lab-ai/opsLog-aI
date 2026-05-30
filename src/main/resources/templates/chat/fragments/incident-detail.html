@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<body>
+<!--
+    Fragment rendered via AJAX for the chat detail pane.
+    Controller returns: "chat/fragments/incident-detail :: detail"
+    Only the <div th:fragment="detail"> is sent to the browser.
+-->
+<div th:fragment="detail" class="detail-content">
+
+    <!-- Error state -->
+    <div th:if="${detailError != null}" class="detail-error-box">
+        <i class="bi bi-exclamation-circle fs-5"></i>
+        <span th:text="${detailError}">エラー</span>
+    </div>
+
+    <!-- Normal state -->
+    <div th:if="${incident != null}">
+
+        <!-- Top bar: title + external link -->
+        <div class="detail-top-bar">
+            <h2 th:text="${incident.title}">障害タイトル</h2>
+            <a th:href="@{/incidents/__${incident.id}__}"
+               class="detail-full-link"
+               target="_blank">
+                <i class="bi bi-box-arrow-up-right"></i>全画面で開く
+            </a>
+        </div>
+
+        <!-- Status / Severity / Date -->
+        <div class="detail-card" style="padding: 10px 14px;">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span th:if="${incident.severity != null}"
+                      class="status-badge"
+                      th:classappend="${incident.severity.name() == 'CRITICAL'} ? 'severity-critical' :
+                                      (${incident.severity.name() == 'HIGH'}     ? 'severity-high'     :
+                                      (${incident.severity.name() == 'MEDIUM'}   ? 'severity-medium'   : 'severity-low'))"
+                      th:text="${incident.severity.displayName}">重要度</span>
+
+                <span th:if="${incident.status != null}"
+                      class="status-badge"
+                      th:classappend="${incident.status.name() == 'OPEN'}          ? 'badge-open'         :
+                                      (${incident.status.name() == 'INVESTIGATING'} ? 'badge-investigating' :
+                                      (${incident.status.name() == 'RESOLVED'}      ? 'badge-resolved'      : 'badge-on-hold'))"
+                      th:text="${incident.status.displayName}">ステータス</span>
+
+                <span class="text-muted" style="font-size:11px;"
+                      th:text="${'作成日：' + #temporals.format(incident.createdAt, 'yyyy/MM/dd HH:mm')}">日時</span>
+            </div>
+        </div>
+
+        <!-- AI Summary -->
+        <div th:if="${incident.aiSummary != null and !#strings.isEmpty(incident.aiSummary)}"
+             class="detail-card">
+            <div class="detail-card-label">
+                <i class="bi bi-file-earmark-text"></i>AI 概要
+            </div>
+            <div class="detail-card-body" th:text="${incident.aiSummary}"></div>
+        </div>
+
+        <!-- AI Cause -->
+        <div th:if="${incident.aiCause != null and !#strings.isEmpty(incident.aiCause)}"
+             class="detail-card">
+            <div class="detail-card-label">
+                <i class="bi bi-search"></i>AI 推定原因
+            </div>
+            <div class="detail-card-body" th:text="${incident.aiCause}"></div>
+        </div>
+
+        <!-- AI Action -->
+        <div th:if="${incident.aiAction != null and !#strings.isEmpty(incident.aiAction)}"
+             class="detail-card">
+            <div class="detail-card-label">
+                <i class="bi bi-wrench"></i>AI 推奨対応
+            </div>
+            <div class="detail-card-body" th:text="${incident.aiAction}"></div>
+        </div>
+
+        <!-- Recent comments -->
+        <div th:if="${recentComments != null and !#lists.isEmpty(recentComments)}"
+             class="detail-card">
+            <div class="detail-card-label">
+                <i class="bi bi-chat-left-text"></i>最近のコメント
+            </div>
+            <div th:each="c : ${recentComments}" class="detail-comment">
+                <div class="detail-comment-meta">
+                    <span th:text="${c.user != null ? c.user.username : '不明'}">ユーザー</span>
+                    ・<span th:text="${#temporals.format(c.createdAt, 'MM/dd HH:mm')}">日時</span>
+                </div>
+                <div class="detail-comment-text" th:text="${c.comment}">コメント</div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

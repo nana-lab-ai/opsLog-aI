@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head th:replace="~{fragments/head :: head('解析結果')}"></head>
+<body class="bg-light">
+<div id="wrapper">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div id="page-content">
+        <div class="topnav">
+            <h5 class="page-title"><i class="bi bi-cpu me-2 text-primary"></i>解析結果</h5>
+            <div class="user-info">
+                <a th:href="@{/log/input}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-plus me-1"></i>新規解析
+                </a>
+                <a th:href="@{/log/list}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-clock-history me-1"></i>履歴
+                </a>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/log/input}">ログ解析</a></li>
+                    <li class="breadcrumb-item active">解析結果</li>
+                </ol>
+            </nav>
+
+            <div class="row g-4">
+                <!-- Left: Extracted Lines -->
+                <div class="col-12 col-lg-7">
+                    <!-- Summary Stats -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <h6 class="fw-bold mb-0" th:text="${entry.title}">タイトル</h6>
+                                <span th:if="${entry.importSource != null and entry.importSource.name() == 'AUTO'}"
+                                      class="badge"
+                                      style="background-color:#0dcaf0; color:#000; font-size:11px;">
+                                    <i class="bi bi-folder-symlink me-1"></i>自動取込
+                                </span>
+                            </div>
+                            <div th:if="${entry.importSource != null and entry.importSource.name() == 'AUTO' and entry.sourceFileName != null}"
+                                 class="text-muted mb-2" style="font-size:11px;">
+                                <i class="bi bi-file-earmark-text me-1"></i>
+                                ソースファイル: <span th:text="${entry.sourceFileName}"></span>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-4 text-center">
+                                    <div style="font-size:24px; font-weight:700; color:#1e2a45;"
+                                         th:text="${totalLines}">0</div>
+                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;">総行数</div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <div style="font-size:24px; font-weight:700; color:#dc3545;"
+                                         th:text="${extractedCount}">0</div>
+                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;">抽出行数</div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <div style="font-size:24px; font-weight:700; color:#198754;">
+                                        <span th:if="${totalLines > 0}"
+                                              th:text="${#numbers.formatDecimal(extractedCount * 100.0 / totalLines, 1, 1)} + '%'">0%</span>
+                                        <span th:if="${totalLines == 0}">-</span>
+                                    </div>
+                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;">エラー率</div>
+                                </div>
+                            </div>
+                            <div class="text-muted mt-2" style="font-size:11px;">
+                                <i class="bi bi-clock me-1"></i>
+                                解析日時: <span th:text="${#temporals.format(entry.createdAt, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extracted Lines -->
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="bi bi-funnel-fill text-danger me-2"></i>
+                                抽出されたエラー行
+                                <span class="badge bg-danger ms-1" th:text="${extractedCount}">0</span>
+                            </span>
+                            <small class="text-muted">ERROR / WARN / Exception / ORA- / failed / timeout / refused / denied</small>
+                        </div>
+                        <div class="card-body p-0">
+                            <div th:if="${#lists.isEmpty(extractedLines)}" class="text-center text-muted py-4">
+                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                エラー行は検出されませんでした
+                            </div>
+                            <div th:if="${not #lists.isEmpty(extractedLines)}" class="log-container" style="border-radius:0 0 10px 10px; max-height:450px;">
+                                <span th:each="line : ${extractedLines}"
+                                      class="log-line"
+                                      th:classappend="${#strings.containsIgnoreCase(line, 'ERROR')} ? ' log-error' :
+                                                      (${#strings.containsIgnoreCase(line, 'WARN')} ? ' log-warn' :
+                                                      (${line.contains('Exception') or line.contains('Error')} ? ' log-exception' :
+                                                      (${#strings.containsIgnoreCase(line, 'timeout') or #strings.containsIgnoreCase(line, 'refused') or #strings.containsIgnoreCase(line, 'denied')} ? ' log-timeout' : ' log-normal')))"
+                                      th:text="${line}">行</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="card">
+                        <div class="card-body d-flex gap-2 align-items-center">
+                            <a th:href="@{/incidents/new(logEntryId=${entry.id})}"
+                               class="btn btn-warning fw-semibold">
+                                <i class="bi bi-ticket-detailed me-1"></i>障害チケットを作成
+                            </a>
+                            <a th:href="@{/log/input}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-repeat me-1"></i>別のログを解析
+                            </a>
+                            <a th:href="@{/log/list}" class="btn btn-outline-secondary">
+                                <i class="bi bi-list me-1"></i>解析履歴
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: AI Analysis -->
+                <div class="col-12 col-lg-5">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <span class="ai-badge">AI</span>解析サマリー
+                        </div>
+                        <div class="card-body">
+                            <div class="ai-section">
+                                <pre style="font-size:12px; white-space:pre-wrap; margin:0; color:#1e2a45; font-family:inherit;"
+                                     th:text="${entry.extractedLog != null and not #strings.isEmpty(entry.extractedLog) ?
+                                               'キーワード: ERROR / WARN / Exception / timeout 等を含む行を抽出しました。\n詳細はAI連携後に自動分析されます。\n\n抽出行数: ' + extractedCount + '行 / 総行数: ' + totalLines + '行'
+                                               : '抽出された行はありませんでした。'}">
+                                </pre>
+                            </div>
+                            <div class="mt-2 text-muted" style="font-size:11px;">
+                                <i class="bi bi-info-circle me-1"></i>
+                                現在はテンプレートベースの解析です。AI API連携後は詳細な要約・原因推定が可能になります。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Raw Log Preview -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-file-text me-2"></i>元ログ（プレビュー）</span>
+                            <small class="text-muted" th:text="${totalLines} + '行'"></small>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="log-container" style="border-radius:0 0 10px 10px; max-height:300px; font-size:11px;">
+                                <span th:text="${#strings.abbreviate(entry.rawLog, 2000)}"
+                                      style="white-space:pre-wrap; display:block; color:#8899bb;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
