@@ -4,22 +4,29 @@
 
 ---
 
+## 概要
+
+OpsLog AI は、サーバログやDBログを登録・解析し、エラー行の抽出、障害チケット管理、対応履歴管理、障害報告書生成、AIチャット風検索を行う業務支援Webアプリです。
+
+運用担当者・社内SE・インフラ/DB運用担当者が、障害調査や初動対応、報告作成を効率化することを想定しています。
+
+ライト / ダークモード切替と日本語 / 英語UI切替に対応しており、Render 上で公開可能なポートフォリオデモとして整備しています。  
+公開デモ向けに入力文字数制限・簡易レート制限・セキュリティヘッダー等のセキュリティ対策も実装しています。
+
+---
+
 ## デモURL
 
 https://opslog-ai.onrender.com
 
 デモログイン：
 
-ID: demo  
+```text
+ID: demo
 PW: demo123
+```
 
-※無料枠で公開しているため、初回アクセス時に起動まで時間がかかる場合があります。
-
-## 概要
-
-OpsLog AI は、サーバログやDBログを登録・解析し、エラー行の抽出、障害チケット管理、対応履歴管理、障害報告書生成、AIチャット風検索を行う業務支援Webアプリです。
-
-運用担当者・社内SE・インフラ/DB運用担当者が、障害調査や初動対応、報告作成を効率化することを想定しています。
+> Renderの無料枠で公開しているため、初回アクセス時に起動まで時間がかかる場合があります。
 
 ---
 
@@ -57,9 +64,15 @@ OpsLog AI は、サーバログやDBログを登録・解析し、エラー行�
 
 ![障害報告書生成](screenshots/08_report_draft.png)
 
+### ダークモード・英語UI
+
+![ダークモード・英語UI](screenshots/09_dark_mode_english_dashboard.png)
+
 ---
 
 ## 主な機能
+
+**ログ解析・障害管理**
 
 * デモログイン（ID: `demo` / PW: `demo123`）
 * ダッシュボード（インシデント件数・重要度サマリー）
@@ -76,20 +89,38 @@ OpsLog AI は、サーバログやDBログを登録・解析し、エラー行�
 * チャット結果から右ペイン詳細表示（画面全体遷移なし）
 * sessionStorage による一時的なチャット履歴保持
 
+**UI・テーマ**
+
+* ライト / ダークモード切替
+* 日本語 / 英語UI切替
+* localStorage によるテーマ・言語設定の保持
+
+**公開デモ向けセキュリティ対策**
+
+* 公開デモ向けの入力文字数制限
+* 簡易レート制限
+* DB登録件数上限
+* セキュリティヘッダー設定（CSP / X-Frame-Options / X-Content-Type-Options 等）
+* 公開環境でのディレクトリ監視無効化
+* Dependabot / CodeQL / OWASP Dependency-Check によるセキュリティ確認
+
 ---
 
 ## 技術構成
 
-| 分類        | 技術                    |
-| ----------- | ----------------------- |
-| Backend     | Java 17, Spring Boot    |
-| View        | Thymeleaf               |
-| Security    | Spring Security         |
-| DB          | SQLite                  |
-| ORM         | Spring Data JPA         |
-| Frontend    | HTML, CSS, JavaScript   |
-| Build       | Maven / Maven Wrapper   |
-| Log Watch   | Java WatchService       |
+| 分類              | 技術                                      |
+| ----------------- | ----------------------------------------- |
+| Backend           | Java 17, Spring Boot                      |
+| View              | Thymeleaf                                 |
+| Security          | Spring Security, CSP, Rate Limit, Input Validation |
+| DB                | SQLite                                    |
+| ORM               | Spring Data JPA                           |
+| Frontend          | HTML, CSS, JavaScript                     |
+| Theme / i18n      | CSS Variables, JavaScript, localStorage   |
+| Build             | Maven / Maven Wrapper                     |
+| Log Watch         | Java WatchService                         |
+| Deploy            | Docker, Render                            |
+| Security Check    | Dependabot, CodeQL, OWASP Dependency-Check |
 
 ---
 
@@ -179,13 +210,37 @@ PW: demo123
 
 ---
 
-## 注意事項
+## テーマ・言語切替
 
-* デモ用アプリです
-* 登録データはリセットされる場合があります
-* 個人情報・機密情報・本番ログは入力しないでください
-* サンプルログはダミーデータのみ使用してください
-* APIキーや秘密情報は含めないでください
+OpsLog AI は、ライト / ダークモードの切替に対応しています。  
+また、日本語 / 英語のUI切替にも対応しています。
+
+- サイドバー下部のボタンでテーマ / 言語を切り替えられます
+- テーマ設定はブラウザの localStorage に保存されます
+- 言語設定はブラウザの localStorage に保存されます
+- ページ再読み込み後も選択状態が維持されます
+- デフォルトはライトモード・日本語表示です
+
+---
+
+## 公開デモの安全対策
+
+公開環境で安全に動作させるため、以下の対策を実装しています。
+
+- ログ本文の入力文字数制限
+- AIチャット質問文の入力文字数制限
+- 短時間の連続操作を抑制する簡易レート制限
+- LogEntry / Incident の登録件数上限
+- エラー情報・スタックトレースの画面非表示
+- Spring Security によるセキュリティヘッダー設定
+- Content-Security-Policy の設定
+- X-Frame-Options / X-Content-Type-Options / Referrer-Policy の設定
+- 公開環境でのディレクトリ監視機能の無効化
+- Dependabot による依存関係チェック
+- CodeQL による静的解析
+- OWASP Dependency-Check による既知脆弱性チェック
+
+> 本アプリはデモ用途です。個人情報・機密情報・本番ログは入力しないでください。
 
 ---
 
@@ -193,20 +248,20 @@ PW: demo123
 
 ### ディレクトリ監視について
 
-* ディレクトリ監視機能はローカル実行環境向けです
-* Render / Railway などのクラウド環境ではファイルシステムへのアクセスに制約があるため、利用できない場合があります
-* `application.properties` の `opslog.watch.enabled=false`（デフォルト値）のまま公開してください
+- ディレクトリ監視機能はローカル実行環境向けです
+- Render などのクラウド環境ではファイルシステムへのアクセスに制約があるため利用できません
+- `application.properties` の `opslog.watch.enabled=false`（デフォルト値）のまま公開してください
 
 ### データの永続化について
 
-* 本アプリは SQLite をファイルベースのDBとして使用しています
-* Render / Railway などのクラウド環境では、コンテナ再起動・再デプロイ時に登録データがリセットされます
-* 永続化が必要な場合は PostgreSQL などの外部DBへの移行が必要です
+- 本アプリは SQLite をファイルベースのDBとして使用しています
+- Render などのクラウド環境では、コンテナ再起動・再デプロイ時に登録データがリセットされます
+- 永続化が必要な場合は PostgreSQL などの外部DBへの移行が必要です
 
 ### デモ用途について
 
-* 本アプリはポートフォリオ・デモ用途を想定しています
-* 個人情報・機密情報・本番ログは絶対に入力しないでください
+- 本アプリはポートフォリオ・デモ用途を想定しています
+- 個人情報・機密情報・本番ログは絶対に入力しないでください
 
 ### Render へのデプロイ手順（概要）
 
@@ -227,6 +282,34 @@ PW: demo123
 
 ---
 
+## セキュリティチェック
+
+OWASP Dependency-Check を実行する場合：
+
+```powershell
+.\mvnw.cmd dependency-check:check
+```
+
+レポート出力先：
+
+```text
+target/dependency-check-report.html
+```
+
+> 初回実行時は脆弱性データベースの取得に時間がかかる場合があります。
+
+---
+
+## 注意事項
+
+* デモ用アプリです
+* 登録データはリセットされる場合があります
+* 個人情報・機密情報・本番ログは入力しないでください
+* サンプルログはダミーデータのみ使用してください
+* APIキーや秘密情報は含めないでください
+
+---
+
 ## 今後の拡張予定
 
 * OpenAI API / Claude API 連携
@@ -236,6 +319,10 @@ PW: demo123
 * Docker対応（Dockerfile 追加済み）
 * PostgreSQL対応
 * RAG / ナレッジ検索連携
+* 英語UIの翻訳範囲拡大
+* 本格的な Spring MessageSource による多言語対応
+* セキュリティテスト項目の拡充
+* 本番向けDBへの移行
 
 ---
 
@@ -244,5 +331,6 @@ PW: demo123
 ```
 Java / Spring Boot / Thymeleaf / SQLite を用いた、サーバログ解析・障害対応管理Webアプリです。
 ログ手動登録、ディレクトリ監視による自動取込、障害チケット管理、対応履歴管理、報告書生成、AIチャット風検索UIを実装しています。
+ライト/ダークモード切替・日本語/英語UI切替に対応し、公開デモ向けのセキュリティ対策も実施しています。
 運用・DB・障害調査の業務改善を想定したポートフォリオアプリです。
 ```
