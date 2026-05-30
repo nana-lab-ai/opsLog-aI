@@ -20,8 +20,16 @@
                 </ol>
             </nav>
 
+            <!-- 公開環境向け警告 -->
+            <div th:if="${isPublicEnv}" class="alert alert-danger d-flex align-items-start gap-2 mb-3">
+                <i class="bi bi-cloud-slash-fill mt-1 flex-shrink-0 fs-5"></i>
+                <div>
+                    <div class="fw-semibold">公開環境ではディレクトリ監視機能は利用できません。</div>
+                    <div style="font-size:13px;">ローカル実行時のみ使用してください。設定の保存は可能ですが、監視サービスは起動しません。</div>
+                </div>
+            </div>
             <!-- ローカル環境向け注意書き -->
-            <div class="alert alert-warning d-flex align-items-start gap-2 mb-3" style="font-size:13px;">
+            <div th:if="${!isPublicEnv}" class="alert alert-warning d-flex align-items-start gap-2 mb-3" style="font-size:13px;">
                 <i class="bi bi-exclamation-triangle-fill mt-1 flex-shrink-0"></i>
                 <span>
                     この機能はローカル実行環境向けです。

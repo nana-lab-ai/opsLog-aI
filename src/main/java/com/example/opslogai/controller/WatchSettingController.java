@@ -30,6 +30,7 @@ public class WatchSettingController {
         model.addAttribute("setting", setting);
         model.addAttribute("form", new WatchSettingForm(setting));
         model.addAttribute("isRunning", directoryWatchService.isRunning());
+        model.addAttribute("isPublicEnv", isPublicEnvironment());
         model.addAttribute("pageTitle", "監視設定");
         return "settings/watch";
     }
@@ -43,6 +44,14 @@ public class WatchSettingController {
         if (bindingResult.hasErrors()) {
             populateModel(model);
             return "settings/watch";
+        }
+
+        // 公開環境では監視サービスを起動しない（設定保存のみ）
+        if (isPublicEnvironment()) {
+            watchSettingService.save(form);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "設定を保存しました。（公開環境のためディレクトリ監視サービスは起動していません）");
+            return "redirect:/settings/watch";
         }
 
         // 監視有効時: ディレクトリが存在しなければ自動作成
@@ -74,6 +83,12 @@ public class WatchSettingController {
     private void populateModel(Model model) {
         model.addAttribute("setting", watchSettingService.getOrInit());
         model.addAttribute("isRunning", directoryWatchService.isRunning());
+        model.addAttribute("isPublicEnv", isPublicEnvironment());
         model.addAttribute("pageTitle", "監視設定");
+    }
+
+    private boolean isPublicEnvironment() {
+        return "true".equalsIgnoreCase(System.getenv("OPSLOG_WATCH_DISABLED"))
+                || System.getenv("RENDER") != null;
     }
 }

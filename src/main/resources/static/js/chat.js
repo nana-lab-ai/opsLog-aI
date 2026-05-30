@@ -89,6 +89,11 @@ function handleSend() {
         body: JSON.stringify({ query: query })
     })
         .then(function (res) {
+            if (res.status === 429) {
+                return res.json().then(function (d) {
+                    throw { rateLimited: true, message: d.message || '短時間に連続操作が行われました。少し待ってから再実行してください。' };
+                });
+            }
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json();
         })
@@ -98,10 +103,13 @@ function handleSend() {
             renderAIBubble(data, aiTime, false);
             appendToHistory({ role: 'ai', data: data, time: aiTime });
         })
-        .catch(function () {
+        .catch(function (err) {
             hideTyping(typingId);
+            var msg = (err && err.rateLimited)
+                ? err.message
+                : '検索中にエラーが発生しました。もう一度お試しください。';
             var errData = {
-                message: '検索中にエラーが発生しました。もう一度お試しください。',
+                message: msg,
                 hasResults: false,
                 results: []
             };

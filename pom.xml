@@ -87,6 +87,24 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <!-- OWASP Dependency-Check: 依存ライブラリの既知脆弱性をチェック -->
+            <!-- 実行: ./mvnw.cmd dependency-check:check -->
+            <!-- レポート: target/dependency-check-report.html -->
+            <!-- ※ 初回実行は NVD データベースのダウンロードで数分かかります -->
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>10.0.3</version>
+                <configuration>
+                    <failBuildOnCVSS>7</failBuildOnCVSS>
+                    <suppressionFile>${project.basedir}/.owasp-suppressions.xml</suppressionFile>
+                    <formats>
+                        <format>HTML</format>
+                        <format>JSON</format>
+                    </formats>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -2,6 +2,7 @@ package com.example.opslogai.service;
 
 import com.example.opslogai.dto.IncidentForm;
 import com.example.opslogai.entity.*;
+import com.example.opslogai.exception.DemoDataLimitException;
 import com.example.opslogai.repository.IncidentCommentRepository;
 import com.example.opslogai.repository.IncidentRepository;
 import com.example.opslogai.repository.LogEntryRepository;
@@ -16,12 +17,19 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class IncidentService {
 
+    static final long MAX_INCIDENTS = 50L;
+
     private final IncidentRepository incidentRepository;
     private final IncidentCommentRepository commentRepository;
     private final LogEntryRepository logEntryRepository;
 
     @Transactional
     public Incident createIncident(IncidentForm form, User user) {
+        if (incidentRepository.count() >= MAX_INCIDENTS) {
+            throw new DemoDataLimitException(
+                    "デモ環境のため障害チケットの上限（" + MAX_INCIDENTS + "件）に達しました。" +
+                    "登録データはリセットされる場合があります。");
+        }
         Incident incident = new Incident();
         incident.setTitle(form.getTitle());
         incident.setSeverity(form.getSeverity());

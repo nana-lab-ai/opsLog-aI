@@ -4,6 +4,7 @@ import com.example.opslogai.dto.LogAnalysisRequest;
 import com.example.opslogai.dto.LogAnalysisResult;
 import com.example.opslogai.entity.LogEntry;
 import com.example.opslogai.entity.User;
+import com.example.opslogai.exception.DemoDataLimitException;
 import com.example.opslogai.repository.LogEntryRepository;
 import com.example.opslogai.repository.UserRepository;
 import com.example.opslogai.service.LogAnalysisService;
@@ -45,8 +46,14 @@ public class LogAnalysisController {
         }
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
-        LogAnalysisResult analysisResult = logAnalysisService.analyzeAndSave(request, user);
-        return "redirect:/log/result/" + analysisResult.getLogEntryId();
+        try {
+            LogAnalysisResult analysisResult = logAnalysisService.analyzeAndSave(request, user);
+            return "redirect:/log/result/" + analysisResult.getLogEntryId();
+        } catch (DemoDataLimitException e) {
+            model.addAttribute("limitError", e.getMessage());
+            model.addAttribute("pageTitle", "ログ解析");
+            return "log/input";
+        }
     }
 
     @GetMapping("/result/{id}")

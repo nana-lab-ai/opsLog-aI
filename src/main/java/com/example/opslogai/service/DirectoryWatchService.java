@@ -70,6 +70,10 @@ public class DirectoryWatchService implements SmartLifecycle {
     // ---- 内部実装 ----
 
     private synchronized void startInternal(WatchSetting setting) {
+        if ("true".equalsIgnoreCase(System.getenv("OPSLOG_WATCH_DISABLED"))) {
+            log.info("ディレクトリ監視: OPSLOG_WATCH_DISABLED=true のため強制無効化されています（公開環境）");
+            return;
+        }
         if (!setting.isEnabled()) {
             log.info("ディレクトリ監視: 無効");
             return;

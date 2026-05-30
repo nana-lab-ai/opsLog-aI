@@ -2,6 +2,7 @@ package com.example.opslogai.controller;
 
 import com.example.opslogai.dto.IncidentForm;
 import com.example.opslogai.entity.*;
+import com.example.opslogai.exception.DemoDataLimitException;
 import com.example.opslogai.repository.LogEntryRepository;
 import com.example.opslogai.repository.UserRepository;
 import com.example.opslogai.service.AiAnalysisService;
@@ -90,8 +91,16 @@ public class IncidentController {
         }
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
-        Incident incident = incidentService.createIncident(form, user);
-        return "redirect:/incidents/" + incident.getId();
+        try {
+            Incident incident = incidentService.createIncident(form, user);
+            return "redirect:/incidents/" + incident.getId();
+        } catch (DemoDataLimitException e) {
+            model.addAttribute("limitError", e.getMessage());
+            model.addAttribute("severities", Severity.values());
+            model.addAttribute("statuses", IncidentStatus.values());
+            model.addAttribute("pageTitle", "障害チケット作成");
+            return "incident/create";
+        }
     }
 
     @GetMapping("/{id}")

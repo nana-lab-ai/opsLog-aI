@@ -24,6 +24,17 @@
                 </ol>
             </nav>
 
+            <!-- レート制限エラー -->
+            <div th:if="${rateLimitError}" class="alert alert-warning d-flex align-items-center gap-2">
+                <i class="bi bi-clock-history flex-shrink-0"></i>
+                <span th:text="${rateLimitError}"></span>
+            </div>
+            <!-- DB上限エラー -->
+            <div th:if="${limitError}" class="alert alert-danger d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-circle flex-shrink-0"></i>
+                <span th:text="${limitError}"></span>
+            </div>
+
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-9">
                     <!-- Log entry info if coming from log analysis -->

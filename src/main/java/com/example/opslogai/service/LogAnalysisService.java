@@ -4,6 +4,7 @@ import com.example.opslogai.dto.LogAnalysisRequest;
 import com.example.opslogai.dto.LogAnalysisResult;
 import com.example.opslogai.entity.LogEntry;
 import com.example.opslogai.entity.User;
+import com.example.opslogai.exception.DemoDataLimitException;
 import com.example.opslogai.repository.LogEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,18 @@ public class LogAnalysisService {
             "ERROR", "WARN", "Exception", "ORA-", "failed", "timeout", "refused", "denied"
     );
 
+    static final long MAX_LOG_ENTRIES = 50L;
+
     private final LogEntryRepository logEntryRepository;
     private final AiAnalysisService aiAnalysisService;
 
     @Transactional
     public LogAnalysisResult analyzeAndSave(LogAnalysisRequest request, User user) {
+        if (logEntryRepository.count() >= MAX_LOG_ENTRIES) {
+            throw new DemoDataLimitException(
+                    "デモ環境のためログエントリの上限（" + MAX_LOG_ENTRIES + "件）に達しました。" +
+                    "登録データはリセットされる場合があります。");
+        }
         List<String> extracted = extractErrorLines(request.getRawLog());
         String extractedText = String.join("\n", extracted);
 

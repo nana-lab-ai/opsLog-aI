@@ -31,6 +31,8 @@ public class ChatController {
         return "chat/index";
     }
 
+    private static final int MAX_QUERY_LENGTH = 500;
+
     /**
      * Async search API — called by chat.js via fetch().
      * Returns JSON; CSRF token required in request header.
@@ -41,7 +43,14 @@ public class ChatController {
     @PostMapping(value = "/search", produces = "application/json")
     @ResponseBody
     public ChatResponse search(@RequestBody ChatRequest request) {
-        String query = request.getQuery() != null ? request.getQuery() : "";
+        String query = request.getQuery() != null ? request.getQuery().trim() : "";
+        if (query.length() > MAX_QUERY_LENGTH) {
+            return ChatResponse.builder()
+                    .message("質問文が長すぎます。" + MAX_QUERY_LENGTH + "文字以内で入力してください。")
+                    .hasResults(false)
+                    .results(List.of())
+                    .build();
+        }
         return chatSearchService.search(query);
     }
 
