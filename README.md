@@ -178,13 +178,51 @@ PW: demo123
 
 ---
 
+## Web公開時の注意
+
+### ディレクトリ監視について
+
+* ディレクトリ監視機能はローカル実行環境向けです
+* Render / Railway などのクラウド環境ではファイルシステムへのアクセスに制約があるため、利用できない場合があります
+* `application.properties` の `opslog.watch.enabled=false`（デフォルト値）のまま公開してください
+
+### データの永続化について
+
+* 本アプリは SQLite をファイルベースのDBとして使用しています
+* Render / Railway などのクラウド環境では、コンテナ再起動・再デプロイ時に登録データがリセットされます
+* 永続化が必要な場合は PostgreSQL などの外部DBへの移行が必要です
+
+### デモ用途について
+
+* 本アプリはポートフォリオ・デモ用途を想定しています
+* 個人情報・機密情報・本番ログは絶対に入力しないでください
+
+### Render へのデプロイ手順（概要）
+
+1. GitHub リポジトリに `Dockerfile` を含めてプッシュする
+2. [Render](https://render.com) にサインインし、「New Web Service」を作成する
+3. GitHub リポジトリを連携する
+4. Runtime: `Docker` を選択する
+5. 環境変数 `PORT` は Render が自動設定する（設定不要）
+6. 「Create Web Service」をクリックしてデプロイする
+
+### Railway へのデプロイ手順（概要）
+
+1. GitHub リポジトリに `Dockerfile` を含めてプッシュする
+2. [Railway](https://railway.app) にサインインし、「New Project」→「Deploy from GitHub repo」を選択する
+3. リポジトリを選択すると `Dockerfile` を自動検出してビルドが始まる
+4. 環境変数 `PORT` は Railway が自動設定する（設定不要）
+5. 「Generate Domain」でアクセスURLを発行する
+
+---
+
 ## 今後の拡張予定
 
 * OpenAI API / Claude API 連携
 * 障害報告書のAI生成精度向上
 * ログ分類ルールの拡張
 * Excel / CSV 出力
-* Docker対応
+* Docker対応（Dockerfile 追加済み）
 * PostgreSQL対応
 * RAG / ナレッジ検索連携
 
