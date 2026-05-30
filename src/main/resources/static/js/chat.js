@@ -8,12 +8,37 @@
 
 const HISTORY_KEY = 'opslog_chat_history_v1';
 
-const WELCOME = {
-    message: 'こんにちは。OpsLog AI サポートです。\n障害チケット・ログ・対応履歴・報告書をチャット形式で検索できます。\n\n例：「未対応の障害を教えて」「ORA-12541 の障害はある？」「timeout が出ているログを探して」',
-    hasResults: false,
-    results: [],
-    query: null
-};
+/* i18n helper — reads current lang from localStorage */
+function ci(key) {
+    var lang = localStorage.getItem('opslog_lang') || 'ja';
+    var dict = {
+        ja: {
+            welcome:         'こんにちは。OpsLog AI サポートです。\n障害チケット・ログ・対応履歴・報告書をチャット形式で検索できます。\n\n例：「未対応の障害を教えて」「ORA-12541 の障害はある？」「timeout が出ているログを探して」',
+            botName:         'OpsLog AI サポート',
+            detailBtn:       '詳細を見る',
+            loading:         '読み込み中...',
+            loadError:       '詳細の読み込みに失敗しました。',
+            openInTab:       '別タブで開く',
+            rateLimitDefault:'短時間に連続操作が行われました。少し待ってから再実行してください。',
+            sendError:       '検索中にエラーが発生しました。もう一度お試しください。',
+            incident:        '障害',
+            log:             'ログ'
+        },
+        en: {
+            welcome:         'Hello. I\'m OpsLog AI Support.\nSearch incident tickets, logs, response history, and reports in chat.\n\nExamples: "Show open incidents", "ORA-12541 incidents?", "Find logs with timeout"',
+            botName:         'OpsLog AI Support',
+            detailBtn:       'View Details',
+            loading:         'Loading...',
+            loadError:       'Failed to load details.',
+            openInTab:       'Open in new tab',
+            rateLimitDefault:'Too many requests. Please wait a moment before trying again.',
+            sendError:       'An error occurred during search. Please try again.',
+            incident:        'Incident',
+            log:             'Log'
+        }
+    };
+    return (dict[lang] || dict.ja)[key] || dict.ja[key] || '';
+}
 
 /* ---------------------------------------------------------
    Init
@@ -91,12 +116,8 @@ function handleSend() {
         .then(function (res) {
             if (res.status === 429) {
                 return res.json().then(function (d) {
-                    throw { rateLimited: true, message: d.message || '短時間に連続操作が行われました。少し待ってから再実行してください。' };
+                    throw { rateLimited: true, message: d.message || ci('rateLimitDefault') };
                 });
-            }
-            if (res.status === 400) {
-                // 入力エラー（文字数超過など）: JSON本文をそのままAIバブルとして表示
-                return res.json();
             }
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json();
@@ -111,7 +132,7 @@ function handleSend() {
             hideTyping(typingId);
             var msg = (err && err.rateLimited)
                 ? err.message
-                : '検索中にエラーが発生しました。もう一度お試しください。';
+                : ci('sendError');
             var errData = {
                 message: msg,
                 hasResults: false,
@@ -129,7 +150,7 @@ function handleSend() {
    Render helpers
    --------------------------------------------------------- */
 function renderWelcome() {
-    var el = buildAIRow(WELCOME, '', true);
+    var el = buildAIRow({ message: ci('welcome'), hasResults: false, results: [] }, '', true);
     document.getElementById('chat-messages').appendChild(el);
 }
 
@@ -166,7 +187,7 @@ function buildAIRow(data, time, isWelcome) {
     row.innerHTML =
         '<div class="msg-avatar ai"><i class="bi bi-robot"></i></div>' +
         '<div class="msg-body">' +
-        '  <div class="msg-sender">OpsLog AI サポート</div>' +
+        '  <div class="msg-sender">' + esc(ci('botName')) + '</div>' +
         '  <div class="msg-bubble ai">' + esc(data.message).replace(/\n/g, '<br>') + '</div>' +
         cardsHtml +
         timeHtml +
@@ -180,8 +201,8 @@ function buildCardHtml(r) {
     var detailUrl = '/chat/detail/' + r.type + '/' + extractId(r.linkUrl);
     var fullUrl   = r.linkUrl || '#';
 
-    var typeCls = isIncident ? 'incident' : 'log';
-    var typeLabel = isIncident ? '障害' : 'ログ';
+    var typeCls   = isIncident ? 'incident' : 'log';
+    var typeLabel = isIncident ? ci('incident') : ci('log');
 
     var badges =
         '<span class="type-tag ' + typeCls + '">' + typeLabel + '</span>' +
@@ -201,7 +222,7 @@ function buildCardHtml(r) {
         '  <button class="btn-detail"' +
         '          data-detail-url="' + escAttr(detailUrl) + '"' +
         '          data-full-url="' + escAttr(fullUrl) + '">' +
-        '    <i class="bi bi-arrow-right-circle"></i> 詳細を見る' +
+        '    <i class="bi bi-arrow-right-circle"></i> ' + esc(ci('detailBtn')) +
         '  </button>' +
         '</div>' +
         '</div>';
@@ -214,7 +235,7 @@ function loadDetail(detailUrl, fullUrl) {
     var pane = document.getElementById('detail-pane');
     pane.innerHTML =
         '<div class="detail-loading">' +
-        '  <i class="bi bi-arrow-repeat spin"></i>読み込み中...' +
+        '  <i class="bi bi-arrow-repeat spin"></i>' + esc(ci('loading')) +
         '</div>';
 
     fetch(detailUrl, {
@@ -232,9 +253,9 @@ function loadDetail(detailUrl, fullUrl) {
             pane.innerHTML =
                 '<div class="detail-placeholder">' +
                 '  <i class="bi bi-exclamation-circle ph-icon" style="color:#dc2626;"></i>' +
-                '  <p>詳細の読み込みに失敗しました。</p>' +
+                '  <p>' + esc(ci('loadError')) + '</p>' +
                 '  <a href="' + escAttr(fullUrl) + '" class="detail-full-link" target="_blank">' +
-                '    <i class="bi bi-box-arrow-up-right"></i> 別タブで開く' +
+                '    <i class="bi bi-box-arrow-up-right"></i> ' + esc(ci('openInTab')) +
                 '  </a>' +
                 '</div>';
         });
@@ -283,7 +304,7 @@ function showTyping() {
     row.innerHTML =
         '<div class="msg-avatar ai"><i class="bi bi-robot"></i></div>' +
         '<div class="msg-body">' +
-        '  <div class="msg-sender">OpsLog AI サポート</div>' +
+        '  <div class="msg-sender">' + esc(ci('botName')) + '</div>' +
         '  <div class="msg-bubble ai">' +
         '    <div class="typing-dots"><span></span><span></span><span></span></div>' +
         '  </div>' +
@@ -316,7 +337,9 @@ function setSendEnabled(enabled) {
 }
 
 function nowTime() {
-    return new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+    var lang   = localStorage.getItem('opslog_lang') || 'ja';
+    var locale = lang === 'en' ? 'en-US' : 'ja-JP';
+    return new Date().toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
 }
 
 function extractId(url) {

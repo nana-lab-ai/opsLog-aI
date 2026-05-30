@@ -1,0 +1,570 @@
+/* ========================================
+   OpsLog AI - Theme (Dark Mode Support)
+   ======================================== */
+
+/* --- Sidebar controls (shared across pages) --- */
+.sidebar-controls {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 0 2px;
+}
+
+.sidebar-ctrl-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 6px;
+    color: var(--sidebar-text-muted);
+    font-size: 11px;
+    padding: 5px 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.sidebar-ctrl-btn:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+/* --- Login page controls (top-right fixed) --- */
+.login-controls {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+}
+
+.login-ctrl-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.20);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.login-ctrl-btn:hover {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+}
+
+/* ========================================
+   Dark mode overrides
+   ======================================== */
+
+/* Override existing CSS variables */
+[data-theme="dark"] {
+    --page-bg: #0f172a;
+    --card-border: #334155;
+}
+
+/* Body */
+[data-theme="dark"] body,
+[data-theme="dark"] body.bg-light {
+    background-color: #0f172a !important;
+    color: #e2e8f0;
+}
+
+/* Topnav */
+[data-theme="dark"] .topnav {
+    background: #1e293b;
+    border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .topnav .page-title {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .topnav .user-info {
+    color: #94a3b8;
+}
+
+/* Cards */
+[data-theme="dark"] .card {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: #1e293b;
+    border-bottom-color: #334155;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .card-body {
+    background-color: #1e293b;
+    color: #cbd5e1;
+}
+
+/* Stat cards */
+[data-theme="dark"] .stat-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .stat-value {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .stat-label {
+    color: #94a3b8;
+}
+
+/* Status badges */
+[data-theme="dark"] .badge-open {
+    background-color: #2a1500;
+    color: #fb923c;
+    border-color: #7c3a00;
+}
+
+[data-theme="dark"] .badge-investigating {
+    background-color: #1f1a00;
+    color: #fbbf24;
+    border-color: #665a00;
+}
+
+[data-theme="dark"] .badge-resolved {
+    background-color: #0a1f0e;
+    color: #4ade80;
+    border-color: #166534;
+}
+
+[data-theme="dark"] .badge-on-hold {
+    background-color: #1a1a1a;
+    color: #a0a0a0;
+    border-color: #404040;
+}
+
+/* Severity badges */
+[data-theme="dark"] .severity-critical {
+    background-color: #2a0a0a;
+    color: #f87171;
+    border-color: #7c1a1a;
+}
+
+[data-theme="dark"] .severity-high {
+    background-color: #2a1000;
+    color: #fb923c;
+    border-color: #7c3a00;
+}
+
+[data-theme="dark"] .severity-medium {
+    background-color: #1f1500;
+    color: #fbbf24;
+    border-color: #665500;
+}
+
+[data-theme="dark"] .severity-low {
+    background-color: #0a1a0a;
+    color: #4ade80;
+    border-color: #14532d;
+}
+
+/* Tables */
+[data-theme="dark"] .table {
+    --bs-table-bg: #1e293b;
+    --bs-table-color: #cbd5e1;
+    --bs-table-border-color: #334155;
+    --bs-table-hover-bg: #263448;
+    --bs-table-striped-bg: #243040;
+}
+
+[data-theme="dark"] .table th {
+    color: #94a3b8;
+    border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .table td {
+    border-bottom-color: #263448;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: #263448;
+}
+
+/* Comments timeline */
+[data-theme="dark"] .comment-box {
+    background: #263448;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .comment-header {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .comment-text {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .comment-dot {
+    border-color: #1e293b;
+}
+
+/* Demo notice */
+[data-theme="dark"] .demo-notice {
+    background: linear-gradient(135deg, #1a1500, #2a2200);
+    border-color: #7c6800;
+    color: #fcd34d;
+}
+
+/* AI section */
+[data-theme="dark"] .ai-section {
+    background: linear-gradient(135deg, #1a2040, #1e2850);
+    border-color: #2e4080;
+}
+
+[data-theme="dark"] .ai-section pre {
+    color: #cbd5e1 !important;
+}
+
+/* Report output */
+[data-theme="dark"] .report-output {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+/* Form controls */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: #263448;
+    color: #e2e8f0;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: #263448;
+    color: #e2e8f0;
+    border-color: #4d7cfe;
+    box-shadow: 0 0 0 0.2rem rgba(77, 124, 254, 0.25);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: #64748b;
+}
+
+[data-theme="dark"] .form-text {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .form-check-label {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .form-check-input {
+    background-color: #263448;
+    border-color: #475569;
+}
+
+/* Breadcrumb */
+[data-theme="dark"] .breadcrumb-item a {
+    color: #64748b;
+}
+
+[data-theme="dark"] .breadcrumb-item.active {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
+    color: #64748b;
+}
+
+/* Text utilities */
+[data-theme="dark"] .text-muted {
+    color: #94a3b8 !important;
+}
+
+/* List groups */
+[data-theme="dark"] .list-group-item {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .list-group-item-action:hover {
+    background-color: #263448;
+    color: #e2e8f0;
+}
+
+/* Login page */
+[data-theme="dark"] .login-wrapper {
+    background: linear-gradient(135deg, #0a0f1e 0%, #1a2236 100%);
+}
+
+[data-theme="dark"] .login-card {
+    background: #1e293b;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+[data-theme="dark"] .login-card h4 {
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .login-card p.text-muted {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .login-card .form-label {
+    color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .login-card hr {
+    border-color: #334155;
+}
+
+[data-theme="dark"] .login-card .text-muted {
+    color: #94a3b8 !important;
+}
+
+/* Alerts */
+[data-theme="dark"] .alert-warning {
+    background-color: #1a1200;
+    border-color: #7c6000;
+    color: #fcd34d;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: #1a0808;
+    border-color: #7c1a1a;
+    color: #f87171;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: #0a1a0a;
+    border-color: #166534;
+    color: #4ade80;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: #0a1520;
+    border-color: #1e4070;
+    color: #60a5fa;
+}
+
+/* Code elements */
+[data-theme="dark"] code {
+    color: #7dd3fc;
+    background-color: transparent;
+}
+
+/* Buttons */
+[data-theme="dark"] .btn-outline-secondary {
+    color: #94a3b8;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-dark {
+    background-color: #4d7cfe;
+    border-color: #4d7cfe;
+}
+
+/* Log textarea override (stays dark in both modes) */
+[data-theme="dark"] .log-textarea {
+    background: #1e2a3a;
+    color: #c8d0e7;
+    border-color: #2e3f6f;
+}
+
+/* HR */
+[data-theme="dark"] hr {
+    border-color: #334155;
+    opacity: 1;
+}
+
+/* Badge overrides */
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #334155 !important;
+}
+
+/* Inline style overrides (for hardcoded colors in templates) */
+[data-theme="dark"] [style*="color:#1e2a45"],
+[data-theme="dark"] [style*="color: #1e2a45"] {
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] [style*="color:#7b89a8"],
+[data-theme="dark"] [style*="color: #7b89a8"] {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] [style*="background:#fafafa"],
+[data-theme="dark"] [style*="background: #fafafa"],
+[data-theme="dark"] [style*="background-color:#fafafa"] {
+    background-color: #1e293b !important;
+}
+
+/* ========================================
+   Chat page dark mode
+   ======================================== */
+
+[data-theme="dark"] .chat-pane {
+    background: #1e293b;
+    border-right-color: #334155;
+}
+
+[data-theme="dark"] .chat-messages {
+    background: #0f172a;
+}
+
+[data-theme="dark"] .chat-demo-notice {
+    background: #1a1200;
+    border-bottom-color: #7c6000;
+    color: #fcd34d;
+}
+
+[data-theme="dark"] .chat-suggestions {
+    background: #1e293b;
+    border-top-color: #334155;
+}
+
+[data-theme="dark"] .suggest-label {
+    color: #64748b;
+}
+
+[data-theme="dark"] .chip {
+    background: #263448;
+    color: #7dd3fc;
+    border-color: #2e4070;
+}
+
+[data-theme="dark"] .chip:hover {
+    background: #2e4070;
+    color: #bfdbfe;
+}
+
+[data-theme="dark"] .chat-input-area {
+    background: #1e293b;
+    border-top-color: #334155;
+}
+
+[data-theme="dark"] #chat-input {
+    background-color: #263448;
+    color: #e2e8f0;
+    border-color: #475569;
+}
+
+[data-theme="dark"] #chat-input:focus {
+    border-color: #4d7cfe;
+}
+
+[data-theme="dark"] .msg-bubble.ai {
+    background: #263448;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .result-card {
+    background: #263448;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .result-card-title {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .result-card-summary {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-detail {
+    color: #7dd3fc;
+    border-color: #2e4070;
+}
+
+[data-theme="dark"] .btn-detail:hover {
+    background: #2e4070;
+    color: #bfdbfe;
+    border-color: #3a5090;
+}
+
+[data-theme="dark"] .detail-pane {
+    background: #0f172a;
+}
+
+[data-theme="dark"] .detail-top-bar {
+    border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .detail-top-bar h2 {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .detail-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .detail-card-body {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .detail-comment {
+    background: #263448;
+    border-left-color: #475569;
+}
+
+[data-theme="dark"] .detail-comment-meta {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .detail-comment-text {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .type-tag.incident {
+    background: #1a2236;
+    color: #7dd3fc;
+}
+
+[data-theme="dark"] .type-tag.log {
+    background: #0a2010;
+    color: #4ade80;
+}
+
+[data-theme="dark"] .type-tag.match {
+    background: #1a1040;
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .detail-placeholder {
+    color: #64748b;
+}
+
+[data-theme="dark"] .detail-error-box {
+    background: #2a0a0a;
+    border-color: #7c1a1a;
+    color: #f87171;
+}
+
+[data-theme="dark"] .detail-full-link {
+    color: #7dd3fc;
+    border-color: #2e4070;
+}
+
+[data-theme="dark"] .detail-full-link:hover {
+    background: #1a2236;
+}

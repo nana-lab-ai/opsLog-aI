@@ -7,10 +7,10 @@
 
     <div id="page-content">
         <div class="topnav">
-            <h5 class="page-title"><i class="bi bi-journal-text me-2 text-primary"></i>ログ解析履歴</h5>
+            <h5 class="page-title"><i class="bi bi-journal-text me-2 text-primary"></i><span data-i18n="loglist.title">ログ解析履歴</span></h5>
             <div class="user-info">
                 <a th:href="@{/log/input}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-plus me-1"></i>新規解析
+                    <i class="bi bi-plus me-1"></i><span data-i18n="log.newAnalysis">新規解析</span>
                 </a>
             </div>
         </div>
@@ -18,14 +18,14 @@
         <div class="content-area">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
-                    <li class="breadcrumb-item active">ログ履歴</li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" data-i18n="bc.dashboard">ダッシュボード</a></li>
+                    <li class="breadcrumb-item active" data-i18n="bc.logHistory">ログ履歴</li>
                 </ol>
             </nav>
 
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-clock-history me-2"></i>解析済みログ一覧
+                    <i class="bi bi-clock-history me-2"></i><span data-i18n="loglist.cardTitle">解析済みログ一覧</span>
                     <span class="badge bg-secondary ms-1" th:text="${#lists.size(entries)}">0</span>
                 </div>
                 <div class="card-body p-0">
@@ -33,12 +33,12 @@
                         <table class="table table-hover mb-0">
                             <thead>
                             <tr>
-                                <th class="ps-3" style="width:40px;">#</th>
-                                <th>解析タイトル</th>
-                                <th style="width:80px;">区分</th>
-                                <th>解析日時</th>
-                                <th>抽出行数</th>
-                                <th>操作</th>
+                                <th class="ps-3" style="width:40px;" data-i18n="loglist.colIndex">#</th>
+                                <th data-i18n="loglist.colTitle">解析タイトル</th>
+                                <th style="width:80px;" data-i18n="loglist.colCategory">区分</th>
+                                <th data-i18n="loglist.colDate">解析日時</th>
+                                <th data-i18n="loglist.colLines">抽出行数</th>
+                                <th data-i18n="loglist.colActions">操作</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -54,10 +54,10 @@
                                     <span th:if="${entry.importSource != null and entry.importSource.name() == 'AUTO'}"
                                           class="badge"
                                           style="background-color:#0dcaf0; color:#000; font-size:11px;">
-                                        <i class="bi bi-folder-symlink me-1"></i>自動取込
+                                        <i class="bi bi-folder-symlink me-1"></i><span data-i18n="loglist.autoImport">自動取込</span>
                                     </span>
                                     <span th:if="${entry.importSource == null or entry.importSource.name() == 'MANUAL'}"
-                                          class="badge bg-secondary" style="font-size:11px;">
+                                          class="badge bg-secondary" style="font-size:11px;" data-i18n="loglist.manual">
                                         手動
                                     </span>
                                 </td>
@@ -72,19 +72,19 @@
                                 <td>
                                     <a th:href="@{/log/result/{id}(id=${entry.id})}"
                                        class="btn btn-sm btn-outline-primary me-1">
-                                        <i class="bi bi-eye me-1"></i>結果表示
+                                        <i class="bi bi-eye me-1"></i><span data-i18n="loglist.viewResult">結果表示</span>
                                     </a>
                                     <a th:href="@{/incidents/new(logEntryId=${entry.id})}"
                                        class="btn btn-sm btn-outline-warning">
-                                        <i class="bi bi-ticket me-1"></i>チケット作成
+                                        <i class="bi bi-ticket me-1"></i><span data-i18n="loglist.createTicket">チケット作成</span>
                                     </a>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(entries)}">
                                 <td colspan="6" class="text-center text-muted py-5">
                                     <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                                    解析済みログはありません。<br>
-                                    <a th:href="@{/log/input}">ログ解析を開始する</a>
+                                    <span data-i18n="loglist.empty">解析済みログはありません。</span><br>
+                                    <a th:href="@{/log/input}" data-i18n="loglist.startLink">ログ解析を開始する</a>
                                 </td>
                             </tr>
                             </tbody>

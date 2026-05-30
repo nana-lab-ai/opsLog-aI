@@ -11,7 +11,7 @@
                 th:text="${incident.title}">障害タイトル</h5>
             <div class="user-info">
                 <a th:href="@{/incidents}" class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>一覧
+                    <i class="bi bi-arrow-left me-1"></i><span data-i18n="inc.backToList">一覧</span>
                 </a>
             </div>
         </div>
@@ -19,8 +19,8 @@
         <div class="content-area">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
-                    <li class="breadcrumb-item"><a th:href="@{/incidents}">障害一覧</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" data-i18n="bc.dashboard">ダッシュボード</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/incidents}" data-i18n="bc.incidents">障害一覧</a></li>
                     <li class="breadcrumb-item active" th:text="${#strings.abbreviate(incident.title, 30)}">詳細</li>
                 </ol>
             </nav>
@@ -37,7 +37,7 @@
                     <!-- Incident Info Card -->
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-info-circle me-2"></i>障害情報</span>
+                            <span><i class="bi bi-info-circle me-2"></i><span data-i18n="inc.info">障害情報</span></span>
                             <div class="d-flex gap-2">
                                 <span class="status-badge"
                                       th:classappend="${incident.severity.name() == 'CRITICAL'} ? 'severity-critical' :
@@ -54,20 +54,20 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <div class="text-muted" style="font-size:11px; font-weight:600;">障害タイトル</div>
+                                    <div class="text-muted" style="font-size:11px; font-weight:600;" data-i18n="inc.title">障害タイトル</div>
                                     <div style="font-size:16px; font-weight:600; color:#1e2a45;"
                                          th:text="${incident.title}">タイトル</div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="text-muted" style="font-size:11px; font-weight:600;">発生日時</div>
+                                    <div class="text-muted" style="font-size:11px; font-weight:600;" data-i18n="inc.createdAt">発生日時</div>
                                     <div th:text="${#temporals.format(incident.createdAt, 'yyyy年MM月dd日 HH:mm')}">日時</div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="text-muted" style="font-size:11px; font-weight:600;">最終更新</div>
+                                    <div class="text-muted" style="font-size:11px; font-weight:600;" data-i18n="inc.updatedAt">最終更新</div>
                                     <div th:text="${#temporals.format(incident.updatedAt, 'yyyy年MM月dd日 HH:mm')}">日時</div>
                                 </div>
                                 <div th:if="${incident.logEntry != null}" class="col-12">
-                                    <div class="text-muted" style="font-size:11px; font-weight:600;">関連ログ</div>
+                                    <div class="text-muted" style="font-size:11px; font-weight:600;" data-i18n="inc.relatedLog">関連ログ</div>
                                     <a th:href="@{/log/result/{id}(id=${incident.logEntry.id})}"
                                        class="d-inline-flex align-items-center gap-1" style="font-size:13px;">
                                         <i class="bi bi-file-earmark-text text-primary"></i>
@@ -82,12 +82,12 @@
                     <!-- AI Analysis Card -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <span class="ai-badge">AI</span>解析内容
+                            <span class="ai-badge">AI</span><span data-i18n="inc.aiAnalysis">解析内容</span>
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
                                 <div class="fw-semibold mb-1" style="font-size:13px;">
-                                    <i class="bi bi-file-earmark-text text-info me-1"></i>障害概要
+                                    <i class="bi bi-file-earmark-text text-info me-1"></i><span data-i18n="inc.summary">障害概要</span>
                                 </div>
                                 <div class="ai-section">
                                     <pre style="white-space:pre-wrap; margin:0; font-size:12.5px; font-family:inherit; color:#1e2a45;"
@@ -96,7 +96,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="fw-semibold mb-1" style="font-size:13px;">
-                                    <i class="bi bi-question-circle text-warning me-1"></i>原因候補
+                                    <i class="bi bi-question-circle text-warning me-1"></i><span data-i18n="inc.cause">原因候補</span>
                                 </div>
                                 <div class="ai-section">
                                     <pre style="white-space:pre-wrap; margin:0; font-size:12.5px; font-family:inherit; color:#1e2a45;"
@@ -105,7 +105,7 @@
                             </div>
                             <div>
                                 <div class="fw-semibold mb-1" style="font-size:13px;">
-                                    <i class="bi bi-tools text-success me-1"></i>初動対応案
+                                    <i class="bi bi-tools text-success me-1"></i><span data-i18n="inc.action">初動対応案</span>
                                 </div>
                                 <div class="ai-section">
                                     <pre style="white-space:pre-wrap; margin:0; font-size:12.5px; font-family:inherit; color:#1e2a45;"
@@ -118,7 +118,7 @@
                     <!-- Comments Section -->
                     <div class="card" id="comments">
                         <div class="card-header">
-                            <i class="bi bi-chat-left-text me-2"></i>対応履歴
+                            <i class="bi bi-chat-left-text me-2"></i><span data-i18n="inc.history">対応履歴</span>
                             <span class="badge bg-secondary ms-1" th:text="${#lists.size(incident.comments)}">0</span>
                         </div>
                         <div class="card-body">
@@ -139,13 +139,13 @@
                             </div>
                             <div th:if="${#lists.isEmpty(incident.comments)}"
                                  class="text-center text-muted py-3">
-                                <i class="bi bi-chat-left me-1"></i>対応メモはまだありません
+                                <i class="bi bi-chat-left me-1"></i><span data-i18n="inc.noMemo">対応メモはまだありません</span>
                             </div>
 
                             <!-- Add Comment Form -->
                             <div class="mt-4 pt-3" style="border-top:1px solid var(--card-border);">
                                 <h6 class="fw-bold mb-3">
-                                    <i class="bi bi-plus-circle me-1 text-primary"></i>対応メモを追加
+                                    <i class="bi bi-plus-circle me-1 text-primary"></i><span data-i18n="inc.addMemo">対応メモを追加</span>
                                 </h6>
                                 <form th:action="@{/incidents/{id}/comments(id=${incident.id})}" method="post">
                                     <div class="mb-2">
@@ -154,7 +154,7 @@
                                                   required></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-send me-1"></i>追加
+                                        <i class="bi bi-send me-1"></i><span data-i18n="inc.addBtn">追加</span>
                                     </button>
                                 </form>
                             </div>
@@ -167,7 +167,7 @@
                     <!-- Status Change -->
                     <div class="card mb-3">
                         <div class="card-header">
-                            <i class="bi bi-arrow-repeat me-2"></i>ステータス変更
+                            <i class="bi bi-arrow-repeat me-2"></i><span data-i18n="inc.statusChange">ステータス変更</span>
                         </div>
                         <div class="card-body">
                             <form th:action="@{/incidents/{id}/status(id=${incident.id})}" method="post">
@@ -180,26 +180,26 @@
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-secondary w-100 btn-sm">
-                                    <i class="bi bi-check me-1"></i>ステータスを更新
+                                    <i class="bi bi-check me-1"></i><span data-i18n="inc.updateStatus">ステータスを更新</span>
                                 </button>
                             </form>
                             <div class="mt-2 d-flex flex-column gap-1">
                                 <form th:action="@{/incidents/{id}/status(id=${incident.id})}" method="post">
                                     <input type="hidden" name="status" value="INVESTIGATING">
                                     <button type="submit" class="btn btn-outline-warning btn-sm w-100 text-start">
-                                        <i class="bi bi-circle-half me-1"></i>調査中に変更
+                                        <i class="bi bi-circle-half me-1"></i><span data-i18n="inc.toInvestigating">調査中に変更</span>
                                     </button>
                                 </form>
                                 <form th:action="@{/incidents/{id}/status(id=${incident.id})}" method="post">
                                     <input type="hidden" name="status" value="RESOLVED">
                                     <button type="submit" class="btn btn-outline-success btn-sm w-100 text-start">
-                                        <i class="bi bi-check-circle me-1"></i>対応済みに変更
+                                        <i class="bi bi-check-circle me-1"></i><span data-i18n="inc.toResolved">対応済みに変更</span>
                                     </button>
                                 </form>
                                 <form th:action="@{/incidents/{id}/status(id=${incident.id})}" method="post">
                                     <input type="hidden" name="status" value="ON_HOLD">
                                     <button type="submit" class="btn btn-outline-secondary btn-sm w-100 text-start">
-                                        <i class="bi bi-pause-circle me-1"></i>保留に変更
+                                        <i class="bi bi-pause-circle me-1"></i><span data-i18n="inc.toOnHold">保留に変更</span>
                                     </button>
                                 </form>
                             </div>
@@ -209,20 +209,20 @@
                     <!-- Report Generation -->
                     <div class="card mb-3">
                         <div class="card-header">
-                            <i class="bi bi-file-earmark-text me-2"></i>障害報告書
+                            <i class="bi bi-file-earmark-text me-2"></i><span data-i18n="inc.report">障害報告書</span>
                         </div>
                         <div class="card-body">
-                            <p class="text-muted mb-3" style="font-size:12px;">
+                            <p class="text-muted mb-3" style="font-size:12px;" data-i18n="inc.reportDesc">
                                 障害情報・対応履歴を元に報告書ドラフトを生成します。
                             </p>
                             <form th:action="@{/incidents/{id}/report/generate(id=${incident.id})}" method="post">
                                 <button type="submit" class="btn btn-outline-primary w-100">
-                                    <i class="bi bi-magic me-1"></i>報告書を生成
+                                    <i class="bi bi-magic me-1"></i><span data-i18n="inc.generateReport">報告書を生成</span>
                                 </button>
                             </form>
                             <a th:href="@{/incidents/{id}/report(id=${incident.id})}"
                                class="btn btn-link w-100 mt-1" style="font-size:12px;">
-                                <i class="bi bi-eye me-1"></i>生成済み報告書を確認
+                                <i class="bi bi-eye me-1"></i><span data-i18n="inc.viewReport">生成済み報告書を確認</span>
                             </a>
                         </div>
                     </div>
@@ -230,7 +230,7 @@
                     <!-- Related Log Preview -->
                     <div th:if="${incident.logEntry != null}" class="card">
                         <div class="card-header">
-                            <i class="bi bi-file-earmark-code me-2"></i>関連ログ（抜粋）
+                            <i class="bi bi-file-earmark-code me-2"></i><span data-i18n="inc.relatedLogPreview">関連ログ（抜粋）</span>
                         </div>
                         <div class="card-body p-0">
                             <div class="log-container" style="border-radius:0 0 10px 10px; max-height:250px; font-size:11px;">
@@ -238,12 +238,12 @@
                                       th:text="${#strings.abbreviate(incident.logEntry.extractedLog, 1500)}"
                                       class="log-error" style="white-space:pre-wrap; display:block;"></span>
                                 <span th:if="${incident.logEntry.extractedLog == null or #strings.isEmpty(incident.logEntry.extractedLog)}"
-                                      style="color:#7b89a8;">抽出ログなし</span>
+                                      style="color:#7b89a8;" data-i18n="inc.noExtractedLog">抽出ログなし</span>
                             </div>
                             <div class="p-2 text-center">
                                 <a th:href="@{/log/result/{id}(id=${incident.logEntry.id})}"
                                    class="btn btn-sm btn-outline-secondary w-100" style="font-size:12px;">
-                                    <i class="bi bi-arrow-up-right me-1"></i>全文を確認
+                                    <i class="bi bi-arrow-up-right me-1"></i><span data-i18n="inc.viewFullLog">全文を確認</span>
                                 </a>
                             </div>
                         </div>

@@ -8,15 +8,15 @@
     <div id="page-content">
         <div class="topnav">
             <h5 class="page-title">
-                <i class="bi bi-folder-symlink me-2 text-primary"></i>ディレクトリ監視設定
+                <i class="bi bi-folder-symlink me-2 text-primary"></i><span data-i18n="watch.pageTitle">ディレクトリ監視設定</span>
             </h5>
         </div>
 
         <div class="content-area">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
-                    <li class="breadcrumb-item active">監視設定</li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" data-i18n="bc.dashboard">ダッシュボード</a></li>
+                    <li class="breadcrumb-item active" data-i18n="bc.watchSettings">監視設定</li>
                 </ol>
             </nav>
 
@@ -31,7 +31,7 @@
             <!-- ローカル環境向け注意書き -->
             <div th:if="${!isPublicEnv}" class="alert alert-warning d-flex align-items-start gap-2 mb-3" style="font-size:13px;">
                 <i class="bi bi-exclamation-triangle-fill mt-1 flex-shrink-0"></i>
-                <span>
+                <span data-i18n="watch.localNote">
                     この機能はローカル実行環境向けです。
                     公開環境ではファイルシステムへのアクセス制限により、ディレクトリ監視が利用できない場合があります。
                 </span>
@@ -52,43 +52,43 @@
                 <div class="col-12 col-lg-4">
                     <div class="card h-100">
                         <div class="card-header">
-                            <i class="bi bi-activity me-2"></i>現在の監視状態
+                            <i class="bi bi-activity me-2"></i><span data-i18n="watch.currentStatus">現在の監視状態</span>
                         </div>
                         <div class="card-body">
                             <!-- 稼働ステータス -->
                             <div class="d-flex align-items-center gap-2 mb-3">
                                 <span th:if="${isRunning}"
                                       class="badge bg-success fs-6 px-3 py-2">
-                                    <i class="bi bi-circle-fill me-1" style="font-size:10px;"></i>稼働中
+                                    <i class="bi bi-circle-fill me-1" style="font-size:10px;"></i><span data-i18n="watch.running">稼働中</span>
                                 </span>
                                 <span th:if="${!isRunning}"
                                       class="badge bg-secondary fs-6 px-3 py-2">
-                                    <i class="bi bi-circle me-1" style="font-size:10px;"></i>停止中
+                                    <i class="bi bi-circle me-1" style="font-size:10px;"></i><span data-i18n="watch.stopped">停止中</span>
                                 </span>
                             </div>
 
                             <!-- 設定詳細 -->
                             <table class="table table-sm table-borderless mb-0" style="font-size:13px;">
                                 <tr>
-                                    <td class="text-muted pe-2" style="white-space:nowrap;">監視有効</td>
+                                    <td class="text-muted pe-2" style="white-space:nowrap;" data-i18n="watch.enableLabel">監視有効</td>
                                     <td>
                                         <span th:if="${setting.enabled}" class="text-success fw-semibold">
-                                            <i class="bi bi-check2-circle me-1"></i>有効
+                                            <i class="bi bi-check2-circle me-1"></i><span data-i18n="watch.enabledVal">有効</span>
                                         </span>
                                         <span th:if="${!setting.enabled}" class="text-muted">
-                                            <i class="bi bi-x-circle me-1"></i>無効
+                                            <i class="bi bi-x-circle me-1"></i><span data-i18n="watch.disabledVal">無効</span>
                                         </span>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted pe-2" style="white-space:nowrap;">監視ディレクトリ</td>
+                                    <td class="text-muted pe-2" style="white-space:nowrap;" data-i18n="watch.directoryLabel">監視ディレクトリ</td>
                                     <td>
                                         <code style="font-size:12px; word-break:break-all;"
                                               th:text="${setting.directoryPath}">-</code>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted pe-2" style="white-space:nowrap;">対象拡張子</td>
+                                    <td class="text-muted pe-2" style="white-space:nowrap;" data-i18n="watch.extensionsLabel">対象拡張子</td>
                                     <td>
                                         <span th:each="ext, s : ${setting.fileExtensionList}">
                                             <span class="badge bg-secondary me-1" th:text="${ext}"></span>
@@ -96,7 +96,7 @@
                                     </td>
                                 </tr>
                                 <tr th:if="${setting.updatedAt != null}">
-                                    <td class="text-muted pe-2" style="white-space:nowrap;">最終更新</td>
+                                    <td class="text-muted pe-2" style="white-space:nowrap;" data-i18n="watch.lastUpdated">最終更新</td>
                                     <td class="text-muted" style="font-size:11px;"
                                         th:text="${#temporals.format(setting.updatedAt, 'yyyy/MM/dd HH:mm:ss')}">-</td>
                                 </tr>
@@ -109,7 +109,7 @@
                 <div class="col-12 col-lg-8">
                     <div class="card">
                         <div class="card-header">
-                            <i class="bi bi-sliders me-2"></i>監視設定を変更
+                            <i class="bi bi-sliders me-2"></i><span data-i18n="watch.editSettings">監視設定を変更</span>
                         </div>
                         <div class="card-body">
                             <form th:action="@{/settings/watch}" th:object="${form}" method="post">
@@ -120,7 +120,7 @@
                                         <input class="form-check-input" type="checkbox" role="switch"
                                                id="enabled" th:field="*{enabled}" style="width:3em; height:1.5em;">
                                         <label class="form-check-label fw-semibold ms-2" for="enabled"
-                                               style="line-height:1.5em;">
+                                               style="line-height:1.5em;" data-i18n="watch.enableLabel">
                                             ディレクトリ監視を有効にする
                                         </label>
                                     </div>
@@ -132,7 +132,7 @@
                                 <!-- 監視ディレクトリ -->
                                 <div class="mb-3">
                                     <label for="directoryPath" class="form-label fw-semibold">
-                                        <i class="bi bi-folder2-open me-1"></i>監視ディレクトリ
+                                        <i class="bi bi-folder2-open me-1"></i><span data-i18n="watch.directoryLabel">監視ディレクトリ</span>
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control font-monospace"
@@ -148,7 +148,7 @@
                                 <!-- 対象拡張子 -->
                                 <div class="mb-4">
                                     <label for="fileExtensions" class="form-label fw-semibold">
-                                        <i class="bi bi-file-earmark-text me-1"></i>対象拡張子
+                                        <i class="bi bi-file-earmark-text me-1"></i><span data-i18n="watch.extensionsLabel">対象拡張子</span>
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control font-monospace"
@@ -164,10 +164,10 @@
 
                                 <div class="d-flex align-items-center gap-2">
                                     <button type="submit" class="btn btn-primary px-4">
-                                        <i class="bi bi-floppy me-1"></i>保存して反映
+                                        <i class="bi bi-floppy me-1"></i><span data-i18n="watch.saveBtn">保存して反映</span>
                                     </button>
                                     <a th:href="@{/settings/watch}" class="btn btn-outline-secondary">
-                                        <i class="bi bi-arrow-counterclockwise me-1"></i>リセット
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i><span data-i18n="watch.resetBtn">リセット</span>
                                     </a>
                                 </div>
 
@@ -182,7 +182,7 @@
                     <!-- 使い方ガイド -->
                     <div class="card mt-3">
                         <div class="card-header" style="font-size:13px;">
-                            <i class="bi bi-question-circle me-2"></i>使い方
+                            <i class="bi bi-question-circle me-2"></i><span data-i18n="watch.howTo">使い方</span>
                         </div>
                         <div class="card-body" style="font-size:12px;">
                             <ol class="mb-0 ps-3" style="line-height:1.9;">

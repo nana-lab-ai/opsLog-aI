@@ -7,10 +7,10 @@
 
     <div id="page-content">
         <div class="topnav">
-            <h5 class="page-title"><i class="bi bi-ticket-detailed me-2 text-warning"></i>障害チケット作成</h5>
+            <h5 class="page-title"><i class="bi bi-ticket-detailed me-2 text-warning"></i><span data-i18n="create.title">障害チケット作成</span></h5>
             <div class="user-info">
                 <a th:href="@{/incidents}" class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>一覧に戻る
+                    <i class="bi bi-arrow-left me-1"></i><span data-i18n="create.back">一覧に戻る</span>
                 </a>
             </div>
         </div>
@@ -18,9 +18,9 @@
         <div class="content-area">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
-                    <li class="breadcrumb-item"><a th:href="@{/incidents}">障害一覧</a></li>
-                    <li class="breadcrumb-item active">新規作成</li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" data-i18n="bc.dashboard">ダッシュボード</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/incidents}" data-i18n="bc.incidents">障害一覧</a></li>
+                    <li class="breadcrumb-item active" data-i18n="bc.newCreate">新規作成</li>
                 </ol>
             </nav>
 
@@ -43,12 +43,12 @@
                             <div class="d-flex align-items-center gap-2">
                                 <i class="bi bi-link-45deg text-primary fs-5"></i>
                                 <div>
-                                    <div style="font-size:12px; color:#7b89a8; font-weight:600;">関連ログエントリ</div>
+                                    <div style="font-size:12px; color:#7b89a8; font-weight:600;" data-i18n="create.relatedLog">関連ログエントリ</div>
                                     <div style="font-weight:500;" th:text="${logEntry.title}">ログタイトル</div>
                                 </div>
                                 <a th:href="@{/log/result/{id}(id=${logEntry.id})}"
                                    class="btn btn-sm btn-outline-primary ms-auto">
-                                    <i class="bi bi-eye me-1"></i>解析結果を確認
+                                    <i class="bi bi-eye me-1"></i><span data-i18n="create.viewResult">解析結果を確認</span>
                                 </a>
                             </div>
                         </div>
@@ -59,12 +59,12 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <i class="bi bi-pencil me-2"></i>基本情報
+                                <i class="bi bi-pencil me-2"></i><span data-i18n="create.basicInfo">基本情報</span>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">
-                                        障害タイトル <span class="text-danger">*</span>
+                                        <span data-i18n="create.incTitle">障害タイトル</span> <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control"
                                            th:field="*{title}"
@@ -76,7 +76,7 @@
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">
-                                            重要度 <span class="text-danger">*</span>
+                                            <span data-i18n="create.severity">重要度</span> <span class="text-danger">*</span>
                                         </label>
                                         <select class="form-select" th:field="*{severity}"
                                                 th:classappend="${#fields.hasErrors('severity')} ? ' is-invalid'">
@@ -88,7 +88,7 @@
                                         <div class="invalid-feedback" th:errors="*{severity}"></div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">初期ステータス</label>
+                                        <label class="form-label fw-semibold" data-i18n="create.initialStatus">初期ステータス</label>
                                         <select class="form-select" th:field="*{status}">
                                             <option th:each="st : ${statuses}"
                                                     th:value="${st.name()}"
@@ -102,27 +102,27 @@
                         <!-- AI Analysis Section -->
                         <div class="card mt-3">
                             <div class="card-header">
-                                <span class="ai-badge">AI</span>解析結果（編集可）
-                                <small class="text-muted ms-2">ログ解析から自動入力されました。内容を確認・編集してください。</small>
+                                <span class="ai-badge">AI</span><span data-i18n="create.aiResults">解析結果（編集可）</span>
+                                <small class="text-muted ms-2" data-i18n="create.autoFilled">ログ解析から自動入力されました。内容を確認・編集してください。</small>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">
-                                        <i class="bi bi-file-earmark-text me-1"></i>障害概要
+                                        <i class="bi bi-file-earmark-text me-1"></i><span data-i18n="create.summary">障害概要</span>
                                     </label>
                                     <textarea class="form-control" th:field="*{aiSummary}" rows="4"
                                               placeholder="障害の概要を入力してください..."></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">
-                                        <i class="bi bi-question-circle me-1"></i>原因候補
+                                        <i class="bi bi-question-circle me-1"></i><span data-i18n="create.cause">原因候補</span>
                                     </label>
                                     <textarea class="form-control" th:field="*{aiCause}" rows="4"
                                               placeholder="推定される原因を入力してください..."></textarea>
                                 </div>
                                 <div class="mb-0">
                                     <label class="form-label fw-semibold">
-                                        <i class="bi bi-tools me-1"></i>初動対応案
+                                        <i class="bi bi-tools me-1"></i><span data-i18n="create.action">初動対応案</span>
                                     </label>
                                     <textarea class="form-control" th:field="*{aiAction}" rows="5"
                                               placeholder="初動対応の手順を入力してください..."></textarea>
@@ -132,10 +132,10 @@
 
                         <div class="d-flex gap-2 mt-3">
                             <button type="submit" class="btn btn-warning fw-semibold px-4">
-                                <i class="bi bi-check-lg me-1"></i>チケットを作成
+                                <i class="bi bi-check-lg me-1"></i><span data-i18n="create.submit">チケットを作成</span>
                             </button>
                             <a th:href="@{/incidents}" class="btn btn-outline-secondary">
-                                <i class="bi bi-x me-1"></i>キャンセル
+                                <i class="bi bi-x me-1"></i><span data-i18n="create.cancel">キャンセル</span>
                             </a>
                         </div>
                     </form>

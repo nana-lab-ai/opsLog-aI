@@ -7,13 +7,13 @@
 
     <div id="page-content">
         <div class="topnav">
-            <h5 class="page-title"><i class="bi bi-cpu me-2 text-primary"></i>解析結果</h5>
+            <h5 class="page-title"><i class="bi bi-cpu me-2 text-primary"></i><span data-i18n="logresult.title">解析結果</span></h5>
             <div class="user-info">
                 <a th:href="@{/log/input}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-plus me-1"></i>新規解析
+                    <i class="bi bi-plus me-1"></i><span data-i18n="logresult.newAnalysis">新規解析</span>
                 </a>
                 <a th:href="@{/log/list}" class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-clock-history me-1"></i>履歴
+                    <i class="bi bi-clock-history me-1"></i><span data-i18n="logresult.historyBtn">履歴</span>
                 </a>
             </div>
         </div>
@@ -21,9 +21,9 @@
         <div class="content-area">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
-                    <li class="breadcrumb-item"><a th:href="@{/log/input}">ログ解析</a></li>
-                    <li class="breadcrumb-item active">解析結果</li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" data-i18n="bc.dashboard">ダッシュボード</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/log/input}" data-i18n="bc.logAnalysis">ログ解析</a></li>
+                    <li class="breadcrumb-item active" data-i18n="bc.logResult">解析結果</li>
                 </ol>
             </nav>
 
@@ -38,24 +38,24 @@
                                 <span th:if="${entry.importSource != null and entry.importSource.name() == 'AUTO'}"
                                       class="badge"
                                       style="background-color:#0dcaf0; color:#000; font-size:11px;">
-                                    <i class="bi bi-folder-symlink me-1"></i>自動取込
+                                    <i class="bi bi-folder-symlink me-1"></i><span data-i18n="logresult.autoImport">自動取込</span>
                                 </span>
                             </div>
                             <div th:if="${entry.importSource != null and entry.importSource.name() == 'AUTO' and entry.sourceFileName != null}"
                                  class="text-muted mb-2" style="font-size:11px;">
                                 <i class="bi bi-file-earmark-text me-1"></i>
-                                ソースファイル: <span th:text="${entry.sourceFileName}"></span>
+                                <span data-i18n="logresult.sourceFile">ソースファイル:</span> <span th:text="${entry.sourceFileName}"></span>
                             </div>
                             <div class="row g-3">
                                 <div class="col-4 text-center">
                                     <div style="font-size:24px; font-weight:700; color:#1e2a45;"
                                          th:text="${totalLines}">0</div>
-                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;">総行数</div>
+                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;" data-i18n="logresult.totalLines">総行数</div>
                                 </div>
                                 <div class="col-4 text-center">
                                     <div style="font-size:24px; font-weight:700; color:#dc3545;"
                                          th:text="${extractedCount}">0</div>
-                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;">抽出行数</div>
+                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;" data-i18n="logresult.extractedLines">抽出行数</div>
                                 </div>
                                 <div class="col-4 text-center">
                                     <div style="font-size:24px; font-weight:700; color:#198754;">
@@ -63,12 +63,13 @@
                                               th:text="${#numbers.formatDecimal(extractedCount * 100.0 / totalLines, 1, 1)} + '%'">0%</span>
                                         <span th:if="${totalLines == 0}">-</span>
                                     </div>
-                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;">エラー率</div>
+                                    <div style="font-size:11px; color:#7b89a8; font-weight:600;" data-i18n="logresult.errorRate">エラー率</div>
                                 </div>
                             </div>
                             <div class="text-muted mt-2" style="font-size:11px;">
                                 <i class="bi bi-clock me-1"></i>
-                                解析日時: <span th:text="${#temporals.format(entry.createdAt, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
+                                <span data-i18n="logresult.analysisDate">解析日時:</span>
+                                <span th:text="${#temporals.format(entry.createdAt, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
                             </div>
                         </div>
                     </div>
@@ -78,7 +79,7 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span>
                                 <i class="bi bi-funnel-fill text-danger me-2"></i>
-                                抽出されたエラー行
+                                <span data-i18n="logresult.extractedHeader">抽出されたエラー行</span>
                                 <span class="badge bg-danger ms-1" th:text="${extractedCount}">0</span>
                             </span>
                             <small class="text-muted">ERROR / WARN / Exception / ORA- / failed / timeout / refused / denied</small>
@@ -86,7 +87,7 @@
                         <div class="card-body p-0">
                             <div th:if="${#lists.isEmpty(extractedLines)}" class="text-center text-muted py-4">
                                 <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                エラー行は検出されませんでした
+                                <span data-i18n="logresult.noErrors">エラー行は検出されませんでした</span>
                             </div>
                             <div th:if="${not #lists.isEmpty(extractedLines)}" class="log-container" style="border-radius:0 0 10px 10px; max-height:450px;">
                                 <span th:each="line : ${extractedLines}"
@@ -105,13 +106,13 @@
                         <div class="card-body d-flex gap-2 align-items-center">
                             <a th:href="@{/incidents/new(logEntryId=${entry.id})}"
                                class="btn btn-warning fw-semibold">
-                                <i class="bi bi-ticket-detailed me-1"></i>障害チケットを作成
+                                <i class="bi bi-ticket-detailed me-1"></i><span data-i18n="logresult.createTicket">障害チケットを作成</span>
                             </a>
                             <a th:href="@{/log/input}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-repeat me-1"></i>別のログを解析
+                                <i class="bi bi-arrow-repeat me-1"></i><span data-i18n="logresult.analyzeAnother">別のログを解析</span>
                             </a>
                             <a th:href="@{/log/list}" class="btn btn-outline-secondary">
-                                <i class="bi bi-list me-1"></i>解析履歴
+                                <i class="bi bi-list me-1"></i><span data-i18n="logresult.analysisHistory">解析履歴</span>
                             </a>
                         </div>
                     </div>
@@ -121,7 +122,7 @@
                 <div class="col-12 col-lg-5">
                     <div class="card mb-3">
                         <div class="card-header">
-                            <span class="ai-badge">AI</span>解析サマリー
+                            <span class="ai-badge">AI</span><span data-i18n="logresult.aiSummary">解析サマリー</span>
                         </div>
                         <div class="card-body">
                             <div class="ai-section">
@@ -141,7 +142,7 @@
                     <!-- Raw Log Preview -->
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-file-text me-2"></i>元ログ（プレビュー）</span>
+                            <span><i class="bi bi-file-text me-2"></i><span data-i18n="logresult.rawLog">元ログ（プレビュー）</span></span>
                             <small class="text-muted" th:text="${totalLines} + '行'"></small>
                         </div>
                         <div class="card-body p-0">

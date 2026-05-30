@@ -12,7 +12,7 @@
         <!-- Topnav -->
         <div class="topnav">
             <h5 class="page-title">
-                <i class="bi bi-chat-dots-fill me-2" style="color:#4d7cfe;"></i>AIチャット検索
+                <i class="bi bi-chat-dots-fill me-2" style="color:#4d7cfe;"></i><span data-i18n="chat.title">AIチャット検索</span>
             </h5>
         </div>
 
@@ -28,10 +28,10 @@
                         <i class="bi bi-robot"></i>
                     </div>
                     <div>
-                        <div class="chat-bot-name">OpsLog AI サポート</div>
+                        <div class="chat-bot-name" data-i18n="chat.botName">OpsLog AI サポート</div>
                         <div class="chat-bot-status">
                             <span class="status-dot"></span>
-                            オンライン・DB 検索モード
+                            <span data-i18n="chat.online">オンライン・DB 検索モード</span>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 <!-- Demo notice -->
                 <div class="chat-demo-notice">
                     <i class="bi bi-shield-exclamation"></i>
-                    デモ用チャット検索です。個人情報・機密情報・本番ログは入力しないでください。
+                    <span data-i18n="chat.notice">デモ用チャット検索です。個人情報・機密情報・本番ログは入力しないでください。</span>
                 </div>
 
                 <!-- Messages area -->
@@ -47,7 +47,7 @@
 
                 <!-- Suggestion chips -->
                 <div class="chat-suggestions">
-                    <div class="suggest-label"><i class="bi bi-lightbulb me-1"></i>よく使う質問</div>
+                    <div class="suggest-label"><i class="bi bi-lightbulb me-1"></i><span data-i18n="chat.suggestions">よく使う質問</span></div>
                     <div class="suggest-chips">
                         <button class="chip">ORA-12541 の障害はある？</button>
                         <button class="chip">timeout が出ているログ</button>
@@ -63,6 +63,7 @@
                 <!-- Input area -->
                 <div class="chat-input-area">
                     <textarea id="chat-input"
+                              data-i18n-placeholder="chat.placeholder"
                               placeholder="質問を入力してください… (Enter で送信)"
                               rows="1"
                               maxlength="500"
@@ -79,9 +80,9 @@
                 <div class="detail-placeholder">
                     <i class="bi bi-layout-text-sidebar ph-icon"></i>
                     <p>
-                        検索結果の <strong>「詳細を見る」</strong> をクリックすると<br>
-                        ここに障害・ログの詳細が表示されます。<br>
-                        <span style="font-size:12px; opacity:0.65;">
+                        <span data-i18n="chat.detailPlaceholder">検索結果の <strong>「詳細を見る」</strong> をクリックすると<br>
+                        ここに障害・ログの詳細が表示されます。</span><br>
+                        <span style="font-size:12px; opacity:0.65;" data-i18n="chat.historyNote">
                             左のチャット履歴はそのまま維持されます。
                         </span>
                     </p>

@@ -7,13 +7,13 @@
 
     <div id="page-content">
         <div class="topnav">
-            <h5 class="page-title"><i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>障害チケット一覧</h5>
+            <h5 class="page-title"><i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i><span data-i18n="inclist.title">障害チケット一覧</span></h5>
             <div class="user-info">
                 <a th:href="@{/incidents/new}" class="btn btn-sm btn-warning">
-                    <i class="bi bi-plus me-1"></i>新規作成
+                    <i class="bi bi-plus me-1"></i><span data-i18n="inclist.newCreate">新規作成</span>
                 </a>
                 <a th:href="@{/log/input}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-search me-1"></i>ログ解析
+                    <i class="bi bi-search me-1"></i><span data-i18n="inclist.logAnalysis">ログ解析</span>
                 </a>
             </div>
         </div>
@@ -21,8 +21,8 @@
         <div class="content-area">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
-                    <li class="breadcrumb-item active">障害一覧</li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" data-i18n="bc.dashboard">ダッシュボード</a></li>
+                    <li class="breadcrumb-item active" data-i18n="bc.incidents">障害一覧</li>
                 </ol>
             </nav>
 
@@ -30,9 +30,10 @@
             <div class="card mb-3">
                 <div class="card-body py-2">
                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <span class="text-muted" style="font-size:12px; font-weight:600;">フィルター:</span>
+                        <span class="text-muted" style="font-size:12px; font-weight:600;" data-i18n="inclist.filterLabel">フィルター:</span>
                         <a th:href="@{/incidents}" class="btn btn-sm"
-                           th:classappend="${selectedStatus == null} ? 'btn-dark' : 'btn-outline-secondary'">
+                           th:classappend="${selectedStatus == null} ? 'btn-dark' : 'btn-outline-secondary'"
+                           data-i18n="inclist.filterAll">
                             すべて
                         </a>
                         <a th:each="st : ${statuses}"
@@ -46,10 +47,10 @@
 
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-list-ul me-2"></i>チケット一覧
+                    <i class="bi bi-list-ul me-2"></i><span data-i18n="inclist.cardTitle">チケット一覧</span>
                     <span class="badge bg-secondary ms-1" th:text="${#lists.size(incidents)}">0</span>
                     <span th:if="${selectedStatus != null}" class="ms-2 text-muted" style="font-size:12px;">
-                        — <span th:text="${selectedStatus.displayName}"></span> でフィルター中
+                        — <span th:text="${selectedStatus.displayName}"></span> <span data-i18n="inclist.filterBy">でフィルター中</span>
                     </span>
                 </div>
                 <div class="card-body p-0">
@@ -57,12 +58,12 @@
                         <table class="table table-hover mb-0">
                             <thead>
                             <tr>
-                                <th class="ps-3" style="width:40px;">#</th>
-                                <th>タイトル</th>
-                                <th>重要度</th>
-                                <th>ステータス</th>
-                                <th>作成日</th>
-                                <th>最終更新</th>
+                                <th class="ps-3" style="width:40px;" data-i18n="loglist.colIndex">#</th>
+                                <th data-i18n="inclist.colTitle">タイトル</th>
+                                <th data-i18n="inclist.colSeverity">重要度</th>
+                                <th data-i18n="inclist.colStatus">ステータス</th>
+                                <th data-i18n="inclist.colCreatedAt">作成日</th>
+                                <th data-i18n="inclist.colUpdatedAt">最終更新</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -101,9 +102,8 @@
                             <tr th:if="${#lists.isEmpty(incidents)}">
                                 <td colspan="6" class="text-center text-muted py-5">
                                     <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                                    障害チケットはありません。<br>
-                                    <a th:href="@{/incidents/new}">新規作成する</a> または
-                                    <a th:href="@{/log/input}">ログ解析から作成する</a>
+                                    <span data-i18n="inclist.empty">障害チケットはありません。</span><br>
+                                    <a th:href="@{/incidents/new}" data-i18n="inclist.newCreate">新規作成する</a>
                                 </td>
                             </tr>
                             </tbody>

@@ -8,7 +8,7 @@
     <div id="page-content">
         <!-- Top Nav -->
         <div class="topnav">
-            <h5 class="page-title"><i class="bi bi-grid-1x2-fill me-2 text-primary"></i>ダッシュボード</h5>
+            <h5 class="page-title"><i class="bi bi-grid-1x2-fill me-2 text-primary"></i><span data-i18n="dash.title">ダッシュボード</span></h5>
             <div class="user-info">
                 <span class="text-muted" style="font-size:12px;">
                     <i class="bi bi-clock me-1"></i>
@@ -25,8 +25,8 @@
             <!-- Demo Notice -->
             <div class="demo-notice">
                 <i class="bi bi-info-circle-fill me-1"></i>
-                <strong>デモ環境のため、登録データはリセットされる場合があります。</strong>
-                個人情報・機密情報・本番ログは入力しないでください。
+                <strong data-i18n="common.demoNotice">デモ環境のため、登録データはリセットされる場合があります。</strong>
+                <span data-i18n="common.securityNotice">個人情報・機密情報・本番ログは入力しないでください。</span>
             </div>
 
             <!-- Stats Row -->
@@ -34,31 +34,31 @@
                 <div class="col-6 col-md-2">
                     <div class="stat-card total">
                         <div class="stat-value" th:text="${totalIncidents}">0</div>
-                        <div class="stat-label">総障害件数</div>
+                        <div class="stat-label" data-i18n="dash.totalIncidents">総障害件数</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="stat-card open">
                         <div class="stat-value text-danger" th:text="${openCount}">0</div>
-                        <div class="stat-label">未対応</div>
+                        <div class="stat-label" data-i18n="dash.open">未対応</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="stat-card investing">
                         <div class="stat-value text-warning" th:text="${investigatingCount}">0</div>
-                        <div class="stat-label">調査中</div>
+                        <div class="stat-label" data-i18n="dash.investigating">調査中</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="stat-card resolved">
                         <div class="stat-value text-success" th:text="${resolvedCount}">0</div>
-                        <div class="stat-label">対応済み</div>
+                        <div class="stat-label" data-i18n="dash.resolved">対応済み</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="stat-card onhold">
                         <div class="stat-value text-secondary" th:text="${onHoldCount}">0</div>
-                        <div class="stat-label">保留</div>
+                        <div class="stat-label" data-i18n="dash.onHold">保留</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
@@ -67,7 +67,7 @@
                         <div class="stat-value" style="color:#6f42c1;">
                             <i class="bi bi-plus-circle" style="font-size:28px;"></i>
                         </div>
-                        <div class="stat-label">ログ解析（新規）</div>
+                        <div class="stat-label" data-i18n="dash.newAnalysis">ログ解析（新規）</div>
                     </div>
                 </div>
             </div>
@@ -77,8 +77,8 @@
                 <div class="col-12 col-lg-7">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>最近の障害チケット</span>
-                            <a th:href="@{/incidents}" class="btn btn-sm btn-outline-secondary" style="font-size:12px;">
+                            <span><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i><span data-i18n="dash.recentIncidents">最近の障害チケット</span></span>
+                            <a th:href="@{/incidents}" class="btn btn-sm btn-outline-secondary" style="font-size:12px;" data-i18n="dash.viewAll">
                                 すべて表示
                             </a>
                         </div>
@@ -87,10 +87,10 @@
                                 <table class="table table-hover mb-0">
                                     <thead>
                                     <tr>
-                                        <th class="ps-3">タイトル</th>
-                                        <th>重要度</th>
-                                        <th>ステータス</th>
-                                        <th>作成日</th>
+                                        <th class="ps-3" data-i18n="dash.colTitle">タイトル</th>
+                                        <th data-i18n="dash.colSeverity">重要度</th>
+                                        <th data-i18n="dash.colStatus">ステータス</th>
+                                        <th data-i18n="dash.colCreatedAt">作成日</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -119,7 +119,7 @@
                                     </tr>
                                     <tr th:if="${#lists.isEmpty(recentIncidents)}">
                                         <td colspan="4" class="text-center text-muted py-4">
-                                            <i class="bi bi-inbox me-1"></i>障害チケットはありません
+                                            <i class="bi bi-inbox me-1"></i><span data-i18n="dash.noIncidents">障害チケットはありません</span>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -133,8 +133,8 @@
                 <div class="col-12 col-lg-5">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-journal-text text-primary me-2"></i>最近のログ解析</span>
-                            <a th:href="@{/log/list}" class="btn btn-sm btn-outline-secondary" style="font-size:12px;">
+                            <span><i class="bi bi-journal-text text-primary me-2"></i><span data-i18n="dash.recentLogs">最近のログ解析</span></span>
+                            <a th:href="@{/log/list}" class="btn btn-sm btn-outline-secondary" style="font-size:12px;" data-i18n="dash.viewAll">
                                 すべて表示
                             </a>
                         </div>
@@ -155,7 +155,7 @@
                                 </a>
                                 <div th:if="${#lists.isEmpty(recentLogs)}"
                                      class="text-center text-muted py-4">
-                                    <i class="bi bi-inbox me-1"></i>ログエントリはありません
+                                    <i class="bi bi-inbox me-1"></i><span data-i18n="dash.noLogs">ログエントリはありません</span>
                                 </div>
                             </div>
                         </div>
@@ -164,18 +164,18 @@
                     <!-- Quick Actions -->
                     <div class="card mt-3">
                         <div class="card-header">
-                            <i class="bi bi-lightning-fill text-warning me-2"></i>クイックアクション
+                            <i class="bi bi-lightning-fill text-warning me-2"></i><span data-i18n="dash.quickActions">クイックアクション</span>
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-2">
                                 <a th:href="@{/log/input}" class="btn btn-primary btn-sm">
-                                    <i class="bi bi-search me-1"></i>ログ解析を開始
+                                    <i class="bi bi-search me-1"></i><span data-i18n="dash.startAnalysis">ログ解析を開始</span>
                                 </a>
                                 <a th:href="@{/incidents/new}" class="btn btn-outline-warning btn-sm">
-                                    <i class="bi bi-plus-circle me-1"></i>障害チケットを作成
+                                    <i class="bi bi-plus-circle me-1"></i><span data-i18n="dash.createTicket">障害チケットを作成</span>
                                 </a>
                                 <a th:href="@{/incidents}" class="btn btn-outline-secondary btn-sm">
-                                    <i class="bi bi-list-ul me-1"></i>障害一覧を確認
+                                    <i class="bi bi-list-ul me-1"></i><span data-i18n="dash.viewIncidents">障害一覧を確認</span>
                                 </a>
                             </div>
                         </div>

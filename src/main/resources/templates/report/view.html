@@ -7,10 +7,10 @@
 
     <div id="page-content">
         <div class="topnav">
-            <h5 class="page-title"><i class="bi bi-file-earmark-text me-2 text-primary"></i>障害報告書</h5>
+            <h5 class="page-title"><i class="bi bi-file-earmark-text me-2 text-primary"></i><span data-i18n="report.title">障害報告書</span></h5>
             <div class="user-info">
                 <a th:href="@{/incidents/{id}(id=${incident.id})}" class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>障害詳細に戻る
+                    <i class="bi bi-arrow-left me-1"></i><span data-i18n="report.backBtn">障害詳細に戻る</span>
                 </a>
             </div>
         </div>
@@ -18,13 +18,13 @@
         <div class="content-area">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">ダッシュボード</a></li>
-                    <li class="breadcrumb-item"><a th:href="@{/incidents}">障害一覧</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" data-i18n="bc.dashboard">ダッシュボード</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/incidents}" data-i18n="bc.incidents">障害一覧</a></li>
                     <li class="breadcrumb-item">
                         <a th:href="@{/incidents/{id}(id=${incident.id})}"
                            th:text="${#strings.abbreviate(incident.title, 25)}">詳細</a>
                     </li>
-                    <li class="breadcrumb-item active">報告書</li>
+                    <li class="breadcrumb-item active" data-i18n="bc.report">報告書</li>
                 </ol>
             </nav>
 
@@ -34,7 +34,7 @@
                     <div class="card mb-3" style="border-left:4px solid #4d7cfe;">
                         <div class="card-body py-2 d-flex align-items-center gap-3">
                             <div>
-                                <div style="font-size:11px; color:#7b89a8; font-weight:600;">障害チケット</div>
+                                <div style="font-size:11px; color:#7b89a8; font-weight:600;" data-i18n="report.ticket">障害チケット</div>
                                 <div style="font-weight:600;" th:text="${incident.title}">タイトル</div>
                             </div>
                             <span class="status-badge ms-auto"
@@ -54,10 +54,10 @@
                     <div th:if="${draft == null}" class="card">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-file-earmark-plus fs-1 text-muted d-block mb-3"></i>
-                            <p class="text-muted">報告書がまだ生成されていません。</p>
+                            <p class="text-muted" data-i18n="report.noDraft">報告書がまだ生成されていません。</p>
                             <form th:action="@{/incidents/{id}/report/generate(id=${incident.id})}" method="post">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-magic me-1"></i>報告書を生成する
+                                    <i class="bi bi-magic me-1"></i><span data-i18n="report.generateBtn">報告書を生成する</span>
                                 </button>
                             </form>
                         </div>
@@ -67,18 +67,19 @@
                     <div th:if="${draft != null}" class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span>
-                                <span class="ai-badge">AI</span>障害報告書ドラフト
+                                <span class="ai-badge">AI</span><span data-i18n="report.aiDraft">障害報告書ドラフト</span>
                             </span>
                             <div class="d-flex gap-2 align-items-center">
                                 <small class="text-muted">
-                                    生成: <span th:text="${#temporals.format(draft.createdAt, 'yyyy/MM/dd HH:mm')}"></span>
+                                    <span data-i18n="report.generated">生成:</span>
+                                    <span th:text="${#temporals.format(draft.createdAt, 'yyyy/MM/dd HH:mm')}"></span>
                                 </small>
                                 <button class="btn btn-sm btn-outline-secondary" onclick="copyReport()">
-                                    <i class="bi bi-clipboard me-1"></i>コピー
+                                    <i class="bi bi-clipboard me-1"></i><span data-i18n="report.copyBtn">コピー</span>
                                 </button>
                                 <form th:action="@{/incidents/{id}/report/generate(id=${incident.id})}" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-arrow-repeat me-1"></i>再生成
+                                        <i class="bi bi-arrow-repeat me-1"></i><span data-i18n="report.regenBtn">再生成</span>
                                     </button>
                                 </form>
                             </div>
@@ -87,7 +88,7 @@
                             <div class="p-3">
                                 <div class="alert alert-warning py-2 mb-3" style="font-size:12px;">
                                     <i class="bi bi-exclamation-triangle me-1"></i>
-                                    本報告書はシステムが自動生成したドラフトです。内容を確認・修正の上、正式報告書として使用してください。
+                                    <span data-i18n="report.draftWarning">本報告書はシステムが自動生成したドラフトです。内容を確認・修正の上、正式報告書として使用してください。</span>
                                 </div>
                                 <pre id="reportContent" class="report-output" th:text="${draft.reportText}">報告書テキスト</pre>
                             </div>
@@ -97,7 +98,7 @@
 
                 <div class="col-12 col-lg-3">
                     <div class="card mb-3">
-                        <div class="card-header">操作</div>
+                        <div class="card-header" data-i18n="report.operations">操作</div>
                         <div class="card-body d-grid gap-2">
                             <form th:action="@{/incidents/{id}/report/generate(id=${incident.id})}" method="post">
                                 <button type="submit" class="btn btn-outline-primary w-100">
@@ -106,20 +107,20 @@
                                 </button>
                             </form>
                             <button th:if="${draft != null}" class="btn btn-outline-secondary" onclick="copyReport()">
-                                <i class="bi bi-clipboard me-1"></i>テキストをコピー
+                                <i class="bi bi-clipboard me-1"></i><span data-i18n="report.copyText">テキストをコピー</span>
                             </button>
                             <button th:if="${draft != null}" class="btn btn-outline-secondary" onclick="printReport()">
-                                <i class="bi bi-printer me-1"></i>印刷
+                                <i class="bi bi-printer me-1"></i><span data-i18n="report.printBtn">印刷</span>
                             </button>
                             <a th:href="@{/incidents/{id}(id=${incident.id})}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>障害詳細に戻る
+                                <i class="bi bi-arrow-left me-1"></i><span data-i18n="report.backDetail">障害詳細に戻る</span>
                             </a>
                         </div>
                     </div>
 
                     <div class="card">
                         <div class="card-header">
-                            <i class="bi bi-info-circle me-1"></i>AI連携について
+                            <i class="bi bi-info-circle me-1"></i><span data-i18n="report.aiInfo">AI連携について</span>
                         </div>
                         <div class="card-body p-3" style="font-size:12px; color:#5a6680; line-height:1.7;">
                             <p class="mb-2">
@@ -148,15 +149,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 function copyReport() {
-    const el = document.getElementById('reportContent');
+    var el = document.getElementById('reportContent');
     if (!el) return;
-    navigator.clipboard.writeText(el.innerText).then(() => {
-        const btn = document.querySelector('[onclick="copyReport()"]');
+    navigator.clipboard.writeText(el.innerText).then(function() {
+        var btn = document.querySelector('[onclick="copyReport()"]');
         if (btn) {
-            const orig = btn.innerHTML;
+            var orig = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check me-1"></i>コピーしました';
             btn.classList.add('btn-success');
-            setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('btn-success'); }, 2000);
+            setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('btn-success'); }, 2000);
         }
     });
 }
