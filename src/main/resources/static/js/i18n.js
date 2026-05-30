@@ -226,7 +226,19 @@
             /* Common */
             'common.demoNotice':      'デモ環境のため、登録データはリセットされる場合があります。',
             'common.securityNotice':  '個人情報・機密情報・本番ログは入力しないでください。',
-            'common.notAvailable':    '（記載なし）'
+            'common.notAvailable':    '（記載なし）',
+
+            /* Enum: Severity */
+            'severity.CRITICAL':      '緊急',
+            'severity.HIGH':          '高',
+            'severity.MEDIUM':        '中',
+            'severity.LOW':           '低',
+
+            /* Enum: Status */
+            'status.OPEN':            '未対応',
+            'status.INVESTIGATING':   '調査中',
+            'status.RESOLVED':        '対応済み',
+            'status.ON_HOLD':         '保留'
         },
 
         en: {
@@ -450,7 +462,19 @@
             /* Common */
             'common.demoNotice':      'Demo environment — registered data may be reset.',
             'common.securityNotice':  'Do not enter personal, confidential, or production log data.',
-            'common.notAvailable':    '(Not available)'
+            'common.notAvailable':    '(Not available)',
+
+            /* Enum: Severity */
+            'severity.CRITICAL':      'Critical',
+            'severity.HIGH':          'High',
+            'severity.MEDIUM':        'Medium',
+            'severity.LOW':           'Low',
+
+            /* Enum: Status */
+            'status.OPEN':            'Open',
+            'status.INVESTIGATING':   'Investigating',
+            'status.RESOLVED':        'Resolved',
+            'status.ON_HOLD':         'On Hold'
         }
     };
 
@@ -459,7 +483,7 @@
     }
 
     function applyElement(el) {
-        var key  = el.getAttribute('data-i18n');
+        var key = el.getAttribute('data-i18n') || el.getAttribute('data-i18n-enum');
         if (!key) return;
         var dict = translations[getLang()] || translations.ja;
         if (dict[key] !== undefined) {
@@ -473,6 +497,14 @@
 
         document.querySelectorAll('[data-i18n]').forEach(function (el) {
             var key = el.getAttribute('data-i18n');
+            if (dict[key] !== undefined) {
+                el.textContent = dict[key];
+            }
+        });
+
+        /* Enum badges: th:text sets Japanese server-side; JS translates client-side */
+        document.querySelectorAll('[data-i18n-enum]').forEach(function (el) {
+            var key = el.getAttribute('data-i18n-enum');
             if (dict[key] !== undefined) {
                 el.textContent = dict[key];
             }

@@ -83,7 +83,8 @@
                                             <option value="">-- 選択してください --</option>
                                             <option th:each="sev : ${severities}"
                                                     th:value="${sev.name()}"
-                                                    th:text="${sev.displayName}">重要度</option>
+                                                    th:text="${sev.displayName}"
+                                                    th:attr="data-i18n-enum=|severity.${sev.name()}|">重要度</option>
                                         </select>
                                         <div class="invalid-feedback" th:errors="*{severity}"></div>
                                     </div>
@@ -92,7 +93,8 @@
                                         <select class="form-select" th:field="*{status}">
                                             <option th:each="st : ${statuses}"
                                                     th:value="${st.name()}"
-                                                    th:text="${st.displayName}">ステータス</option>
+                                                    th:text="${st.displayName}"
+                                                    th:attr="data-i18n-enum=|status.${st.name()}|">ステータス</option>
                                         </select>
                                     </div>
                                 </div>

@@ -248,6 +248,8 @@ function loadDetail(detailUrl, fullUrl) {
         .then(function (html) {
             if (!html || html.trim() === '') throw new Error('empty');
             pane.innerHTML = html;
+            /* Translate enum badges in the newly loaded fragment */
+            if (window.OpsI18n) window.OpsI18n.apply();
         })
         .catch(function () {
             pane.innerHTML =

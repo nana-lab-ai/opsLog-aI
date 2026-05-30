@@ -43,12 +43,14 @@
                                       th:classappend="${incident.severity.name() == 'CRITICAL'} ? 'severity-critical' :
                                                        (${incident.severity.name() == 'HIGH'} ? 'severity-high' :
                                                        (${incident.severity.name() == 'MEDIUM'} ? 'severity-medium' : 'severity-low'))"
-                                      th:text="${incident.severity.displayName}">重要度</span>
+                                      th:text="${incident.severity.displayName}"
+                                      th:attr="data-i18n-enum=|severity.${incident.severity.name()}|">重要度</span>
                                 <span class="status-badge"
                                       th:classappend="${incident.status.name() == 'OPEN'} ? 'badge-open' :
                                                        (${incident.status.name() == 'INVESTIGATING'} ? 'badge-investigating' :
                                                        (${incident.status.name() == 'RESOLVED'} ? 'badge-resolved' : 'badge-on-hold'))"
-                                      th:text="${incident.status.displayName}">ステータス</span>
+                                      th:text="${incident.status.displayName}"
+                                      th:attr="data-i18n-enum=|status.${incident.status.name()}|">ステータス</span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -176,6 +178,7 @@
                                         <option th:each="st : ${statuses}"
                                                 th:value="${st.name()}"
                                                 th:text="${st.displayName}"
+                                                th:attr="data-i18n-enum=|status.${st.name()}|"
                                                 th:selected="${st == incident.status}">ステータス</option>
                                     </select>
                                 </div>

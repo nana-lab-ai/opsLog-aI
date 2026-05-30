@@ -35,14 +35,16 @@
                       th:classappend="${incident.severity.name() == 'CRITICAL'} ? 'severity-critical' :
                                       (${incident.severity.name() == 'HIGH'}     ? 'severity-high'     :
                                       (${incident.severity.name() == 'MEDIUM'}   ? 'severity-medium'   : 'severity-low'))"
-                      th:text="${incident.severity.displayName}">重要度</span>
+                      th:text="${incident.severity.displayName}"
+                      th:attr="data-i18n-enum=|severity.${incident.severity.name()}|">重要度</span>
 
                 <span th:if="${incident.status != null}"
                       class="status-badge"
                       th:classappend="${incident.status.name() == 'OPEN'}          ? 'badge-open'         :
                                       (${incident.status.name() == 'INVESTIGATING'} ? 'badge-investigating' :
                                       (${incident.status.name() == 'RESOLVED'}      ? 'badge-resolved'      : 'badge-on-hold'))"
-                      th:text="${incident.status.displayName}">ステータス</span>
+                      th:text="${incident.status.displayName}"
+                      th:attr="data-i18n-enum=|status.${incident.status.name()}|">ステータス</span>
 
                 <span class="text-muted" style="font-size:11px;"
                       th:text="${'作成日：' + #temporals.format(incident.createdAt, 'yyyy/MM/dd HH:mm')}">日時</span>
