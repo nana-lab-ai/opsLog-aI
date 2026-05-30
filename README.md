@@ -1,121 +1,199 @@
-# OpsLog AI — ログ解析・障害対応管理 Web アプリ
+# OpsLog AI
 
-Java / Spring Boot で実装したポートフォリオ用 Web アプリケーションです。  
-システムログを貼り付けるだけでエラー行を自動抽出し、AI（テンプレートベース）による解析結果を表示します。障害対応をインシデントとして記録・追跡し、対応完了後の事後報告書ドラフトをワンクリックで生成できます。
-
----
-
-## 機能一覧
-
-| 機能 | 概要 |
-|------|------|
-| **ログ解析** | 生ログを貼り付け → ERROR / WARN / Exception などのキーワードでフィルタリング → AI サマリー・原因候補・初動対応案を生成 |
-| **インシデント管理** | 重要度（CRITICAL / HIGH / MEDIUM / LOW）とステータス（OPEN / 調査中 / 解決済 / 保留）で障害票を管理。コメントで対応履歴を記録 |
-| **事後報告書生成** | 対応済みインシデントから報告書ドラフトを自動生成 |
-| **ダッシュボード** | インシデントの件数・重要度の内訳をサマリー表示 |
-| **認証** | Spring Security によるログイン認証（BCrypt ハッシュ） |
+ログ解析・障害対応管理システム
 
 ---
 
-## 技術スタック
+## 概要
 
-| レイヤー | 技術 |
-|---------|------|
-| 言語 / フレームワーク | Java 17 / Spring Boot 3.3.0 |
-| セキュリティ | Spring Security 6（BCrypt、カスタム UserDetailsService） |
-| データ永続化 | Spring Data JPA + SQLite（hibernate-community-dialects） |
-| フロントエンド | Thymeleaf + Bootstrap 5.3 |
-| ビルド | Maven 3.9.6 |
-| ユーティリティ | Lombok、Spring Boot DevTools |
+OpsLog AI は、サーバログやDBログを登録・解析し、エラー行の抽出、障害チケット管理、対応履歴管理、障害報告書生成、AIチャット風検索を行う業務支援Webアプリです。
+
+運用担当者・社内SE・インフラ/DB運用担当者が、障害調査や初動対応、報告作成を効率化することを想定しています。
 
 ---
 
-## ディレクトリ構成
+## スクリーンショット
 
-```
-src/main/java/com/example/opslogai/
-├── config/
-│   ├── SecurityConfig.java       # Spring Security 設定
-│   └── DataInitializer.java      # 起動時サンプルデータ投入
-├── controller/
-│   ├── AuthController.java
-│   ├── DashboardController.java
-│   ├── LogAnalysisController.java
-│   ├── IncidentController.java
-│   └── ReportController.java
-├── service/
-│   ├── LogAnalysisService.java   # キーワード抽出ロジック
-│   ├── AiAnalysisService.java    # AI解析（テンプレートベース実装）
-│   ├── IncidentService.java
-│   └── ReportService.java
-├── entity/                       # JPA エンティティ
-├── repository/                   # Spring Data リポジトリ
-└── dto/                          # リクエスト / レスポンス DTO
-```
+### ログイン画面
 
----
+![ログイン画面](screenshots/01_login.png)
 
-## データベース設計
+### ダッシュボード
 
-| テーブル | 内容 |
-|---------|------|
-| `users` | ログインユーザー |
-| `log_entries` | 投入された生ログと抽出済みエラー行 |
-| `incidents` | インシデント票（重要度・ステータス・AI 解析結果） |
-| `incident_comments` | インシデントへのコメント（対応履歴） |
-| `report_drafts` | 事後報告書ドラフト |
+![ダッシュボード](screenshots/02_dashboard.png)
 
-DBファイル（`opslogai.db`）は起動時に自動生成され、サンプルデータ 4件が自動投入されます。
+### ログ解析履歴・自動取込
+
+![ログ解析履歴・自動取込](screenshots/03_log_history_auto_import.png)
+
+### 障害詳細
+
+![障害詳細](screenshots/04_incident_detail.png)
+
+### AIチャット検索
+
+![AIチャット検索](screenshots/05_ai_chat_search.png)
+
+### ディレクトリ監視設定
+
+![ディレクトリ監視設定](screenshots/06_watch_settings.png)
+
+### ログ解析入力
+
+![ログ解析入力](screenshots/07_log_input.png)
+
+### 障害報告書生成
+
+![障害報告書生成](screenshots/08_report_draft.png)
 
 ---
 
-## AI 解析について
+## 主な機能
 
-`AiAnalysisService` がテンプレートベースでサマリー・原因候補・初動対応案を生成します。  
-抽出行に含まれるキーワード（`OutOfMemory` / `timeout` / `Connection refused` / `ORA-` など）を判定し、対応する定型文を組み立てる実装です。  
-外部 API（OpenAI / Claude）と連携する際は、このクラスを差し替えるだけで対応できる設計になっています。
+* デモログイン（ID: `demo` / PW: `demo123`）
+* ダッシュボード（インシデント件数・重要度サマリー）
+* ログ手動登録
+* エラー行抽出（ERROR / WARN / Exception / ORA- / failed / timeout / refused / denied）
+* ログ解析履歴
+* 障害チケット作成
+* ステータス管理（未対応 / 調査中 / 対応済み / 保留）
+* 対応メモ登録
+* 障害報告書生成
+* ディレクトリ監視によるログファイル自動取込
+* 監視設定画面（拡張子・ディレクトリ指定）
+* AIチャット風検索UI
+* チャット結果から右ペイン詳細表示（画面全体遷移なし）
+* sessionStorage による一時的なチャット履歴保持
 
 ---
 
-## セットアップ・起動
+## 技術構成
 
-### 前提条件
+| 分類        | 技術                    |
+| ----------- | ----------------------- |
+| Backend     | Java 17, Spring Boot    |
+| View        | Thymeleaf               |
+| Security    | Spring Security         |
+| DB          | SQLite                  |
+| ORM         | Spring Data JPA         |
+| Frontend    | HTML, CSS, JavaScript   |
+| Build       | Maven / Maven Wrapper   |
+| Log Watch   | Java WatchService       |
 
-- JDK 17
-- Maven 3.x
+---
 
-### 起動（Windows）
+## 前提環境
 
-```cmd
-run.cmd
-```
+- Java 17
+- Windows 10 / 11
+- Maven Wrapper 使用のため Maven の事前インストールは不要
 
-`run.cmd` は `JAVA_HOME` と `MAVEN_OPTS`（Windows 証明書ストア対応）を設定した上で `mvn spring-boot:run` を実行します。
+---
 
-### パッケージ化
+## 起動方法
 
-```cmd
-build.cmd
+```powershell
+.\mvnw.cmd spring-boot:run
 ```
 
-`target/opslogai-0.0.1-SNAPSHOT.jar` が生成されます。
+または
 
-### アクセス
+```powershell
+.\run.cmd
+```
 
-| 項目 | 値 |
-|------|----|
-| URL | http://localhost:18080 |
-| デモアカウント | `demo` / `demo123` |
+アクセスURL：
+
+```
+http://localhost:18080
+```
+
+デモログイン：
+
+```
+ID: demo
+PW: demo123
+```
 
 ---
 
-## サンプルデータ
+## ログ解析の使い方
 
-起動時に以下の 4 件のインシデントが自動投入されます。
+1. ログイン
+2. 「ログ解析（新規）」を開く
+3. サンプルログを貼り付ける
+4. 解析実行
+5. ERROR / WARN / Exception / ORA- / failed / timeout / refused / denied を含む行を抽出
+6. 解析結果から障害チケットを作成
 
-| タイトル | 重要度 | ステータス |
-|---------|--------|-----------|
-| 本番APサーバー OOMによるサービス停止 | CRITICAL | OPEN |
-| DBサーバー 接続タイムアウト多発・サービス影響 | HIGH | 調査中 |
-| 認証サービス SSL証明書期限切れによる認証不可 | MEDIUM | 解決済 |
-| 夜間バッチ処理タイムアウト（スロークエリ起因） | LOW | 保留 |
+---
+
+## サンプルログ
+
+ログ解析画面で動作確認する場合は、以下のようなダミーログを使用できます。
+
+```log
+2026-05-30 14:00:01 INFO  [batch-job-01] Daily batch process started
+2026-05-30 14:00:05 WARN  [db-pool] Connection pool usage is high: active=48, max=50
+2026-05-30 14:00:08 ERROR [db-pool] DB connection timeout after 30000ms
+2026-05-30 14:00:10 ERROR [oracle-client] ORA-12541: TNS:no listener
+2026-05-30 14:00:12 WARN  [retry-handler] retry failed: attempt=1, reason=connection refused
+2026-05-30 14:00:18 java.sql.SQLRecoverableException: IO Error: The Network Adapter could not establish the connection
+```
+
+---
+
+## ディレクトリ監視の使い方
+
+1. 「監視設定」を開く
+2. 監視を有効にする
+3. 監視ディレクトリを指定する
+4. 対象拡張子を `.log,.txt` に設定する
+5. アプリ起動後に監視ディレクトリへログファイルを配置する
+6. ログ履歴に「自動取込」として表示される
+
+> **注意：** この機能はローカル実行環境向けです。公開環境では利用できない場合があります。
+
+---
+
+## AIチャット検索の使い方
+
+1. 「AIチャット検索」を開く
+2. 「timeout が出ているログ」などを質問する
+3. 関連する障害・ログがカード形式で表示される
+4. 「詳細を見る」を押すと右ペインだけ切り替わる
+5. 左側のチャット履歴は維持される
+
+> **注意：** 現在のAIチャット検索は、外部LLM APIを使わず、DB検索＋AI風回答生成で動作しています。将来的に OpenAI API / Claude API へ差し替え可能な構成です。
+
+---
+
+## 注意事項
+
+* デモ用アプリです
+* 登録データはリセットされる場合があります
+* 個人情報・機密情報・本番ログは入力しないでください
+* サンプルログはダミーデータのみ使用してください
+* APIキーや秘密情報は含めないでください
+
+---
+
+## 今後の拡張予定
+
+* OpenAI API / Claude API 連携
+* 障害報告書のAI生成精度向上
+* ログ分類ルールの拡張
+* Excel / CSV 出力
+* Docker対応
+* PostgreSQL対応
+* RAG / ナレッジ検索連携
+
+---
+
+## ポートフォリオ説明文
+
+```
+Java / Spring Boot / Thymeleaf / SQLite を用いた、サーバログ解析・障害対応管理Webアプリです。
+ログ手動登録、ディレクトリ監視による自動取込、障害チケット管理、対応履歴管理、報告書生成、AIチャット風検索UIを実装しています。
+運用・DB・障害調査の業務改善を想定したポートフォリオアプリです。
+```
