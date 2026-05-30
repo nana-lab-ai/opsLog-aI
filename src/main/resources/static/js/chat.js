@@ -94,6 +94,10 @@ function handleSend() {
                     throw { rateLimited: true, message: d.message || '短時間に連続操作が行われました。少し待ってから再実行してください。' };
                 });
             }
+            if (res.status === 400) {
+                // 入力エラー（文字数超過など）: JSON本文をそのままAIバブルとして表示
+                return res.json();
+            }
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json();
         })

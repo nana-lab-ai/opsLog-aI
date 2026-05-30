@@ -9,6 +9,7 @@ import com.example.opslogai.repository.LogEntryRepository;
 import com.example.opslogai.service.ChatSearchService;
 import com.example.opslogai.service.IncidentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,16 +43,17 @@ public class ChatController {
      */
     @PostMapping(value = "/search", produces = "application/json")
     @ResponseBody
-    public ChatResponse search(@RequestBody ChatRequest request) {
+    public ResponseEntity<ChatResponse> search(@RequestBody ChatRequest request) {
         String query = request.getQuery() != null ? request.getQuery().trim() : "";
         if (query.length() > MAX_QUERY_LENGTH) {
-            return ChatResponse.builder()
-                    .message("質問文が長すぎます。" + MAX_QUERY_LENGTH + "文字以内で入力してください。")
-                    .hasResults(false)
-                    .results(List.of())
-                    .build();
+            return ResponseEntity.badRequest().body(
+                    ChatResponse.builder()
+                            .message("質問文が長すぎます。" + MAX_QUERY_LENGTH + "文字以内で入力してください。")
+                            .hasResults(false)
+                            .results(List.of())
+                            .build());
         }
-        return chatSearchService.search(query);
+        return ResponseEntity.ok(chatSearchService.search(query));
     }
 
     /**
