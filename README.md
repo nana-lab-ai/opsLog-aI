@@ -272,13 +272,6 @@ OpsLog AI は、ライト / ダークモードの切替に対応しています�
 5. 環境変数 `PORT` は Render が自動設定する（設定不要）
 6. 「Create Web Service」をクリックしてデプロイする
 
-### Railway へのデプロイ手順（概要）
-
-1. GitHub リポジトリに `Dockerfile` を含めてプッシュする
-2. [Railway](https://railway.app) にサインインし、「New Project」→「Deploy from GitHub repo」を選択する
-3. リポジトリを選択すると `Dockerfile` を自動検出してビルドが始まる
-4. 環境変数 `PORT` は Railway が自動設定する（設定不要）
-5. 「Generate Domain」でアクセスURLを発行する
 
 ---
 
@@ -316,7 +309,6 @@ target/dependency-check-report.html
 * 障害報告書のAI生成精度向上
 * ログ分類ルールの拡張
 * Excel / CSV 出力
-* Docker対応（Dockerfile 追加済み）
 * PostgreSQL対応
 * RAG / ナレッジ検索連携
 * 英語UIの翻訳範囲拡大
